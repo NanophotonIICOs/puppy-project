@@ -3,10 +3,10 @@
 ## ***************************************************************************
 ## The font properties used by `text.Text`.
 font.family:  serif
-text.usetex: True
+#text.usetex: True
 #font.size:    10.0
 #font.serif: Times New Roman
-mathtext.rm:  sans
+#mathtext.rm:  sans
 
 
 
