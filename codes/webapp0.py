@@ -6,6 +6,7 @@ import requests, os
 import h5py as h5
 import glob
 from os import walk
+import time
 from matplotlib.gridspec import GridSpec
 from labexp import experiments
 from mpl_toolkits.axes_grid1 import make_axes_locatable,ImageGrid, AxesGrid
@@ -22,11 +23,8 @@ mpl.use("agg")
 # Moreover, we will guard all operations on the figure instances by the
 # class-level lock in the Agg backend.
 ##############################################################################
-from matplotlib.backends.backend_agg import RendererAgg
-_lock = RendererAgg.lock
 
 apptitle = "Puppy's Analysis"
-
 st.set_page_config(page_title=apptitle, page_icon=":blue_heart:")
 st.title("Image analysis from spectro lab (Puppy's Master Thesis)")
 # st.markdown("""
@@ -38,7 +36,7 @@ st.sidebar.markdown("# Parameters")
 
 labs_list = ["nano-lab","spectro-lab-2"]
 
-exp_list = ["afm","nsom","ras","pr"]
+exp_list = ["afm","nsom"]
 
 select_lab = st.sidebar.selectbox('Select Laboratory',labs_list)
 select_exp = st.sidebar.selectbox('Select Expriment',exp_list)
@@ -51,12 +49,23 @@ def get_list_samples():
         folder_samples.append(folders.split(path)[-1])
     return folder_samples
 
-sample=st.sidebar.selectbox('Select sample',get_list_samples())
+def _plot(data,**kwargs):
+    fig = plt.figure(figsize=(5, 2))
+    fig.patch.set_facecolor('none')
+    gs = GridSpec(1, 2, figure=fig,wspace=0.3,hspace=0.5,width_ratios=[1,1])
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax1.imshow(afm[:,1:],origin='lower',cmap='cool',aspect='auto',interpolation='gaussian')
+    ax1.plot([0,43],[line,line],'r')
+    ax2.plot(afm[line,1:],'o-r',ms=4,lw=1,mfc='none')
+    ax2.patch.set_facecolor('none')
+    return fig
 
-#noexp=st.sidebar.text_input("Select No. Dir: ",value=1)
 
-exp = experiments(select_lab,select_exp,sample,False)
-noexp = st.sidebar.selectbox("Select Measurement",exp.dframe['Name Dir'].tolist())
+with st.sidebar:
+    sample=st.selectbox('Select sample',get_list_samples())
+    exp = experiments(select_lab,select_exp,sample,False)
+    noexp = st.selectbox("Select Measurement",exp.dframe['Name Dir'].tolist())
 
 count=0
 for i in exp.dframe['Name Dir'].tolist():
@@ -65,46 +74,26 @@ for i in exp.dframe['Name Dir'].tolist():
     else:
         count+=1
 
-# dframe=exp.dframe
-# st.table(dframe)
-afm = exp.data[count][0][:,:,0].T
-line = st.sidebar.slider('pixel', 0,5, 1)
-ColorMinMax = st.markdown(''' <style> div.stSlider > div[data-baseweb = "slider"] > div[data-testid="stTickBar"] > div {
-    background: rgb(1 1 1 / 0%); } </style>''', unsafe_allow_html = True)
+try:
+        afm = exp.data[count][0][:,:,0].T
 
-
-Slider_Cursor = st.markdown(''' <style> div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
-    background-color: rgb(14, 38, 74); box-shadow: rgb(14 38 74 / 20%) 0px 0px 0px 0.2rem;} </style>''', unsafe_allow_html = True)
-
-    
-Slider_Number = st.markdown(''' <style> div.stSlider > div[data-baseweb="slider"] > div > div > div > div
-                                { color: rgb(14, 38, 74); } </style>''', unsafe_allow_html = True)
-    
-
-col = f''' <style> div.stSlider > div[data-baseweb = "slider"] > div > div {{
-    background: linear-gradient(to right, rgb(1, 183, 158) 0%, 
-                                rgb(1, 183, 158) {line}%, 
-                                rgba(151, 166, 195, 0.25) {line}%, 
-                                rgba(151, 166, 195, 0.25) 100%); }} </style>'''
-
-ColorSlider = st.markdown(col, unsafe_allow_html = True) 
-
-with _lock:
-    fig = plt.figure(figsize=(5, 2))
-    fig.patch.set_facecolor('none')
-    gs = GridSpec(1, 2, figure=fig,wspace=0.3,hspace=0.3,width_ratios=[1,1])
-    ax1 = fig.add_subplot(gs[0, 0])
-    ax2 =fig.add_subplot(gs[0, 1])
-    ax1.imshow(afm[:,1:],origin='lower',cmap='cool',aspect='auto',interpolation='gaussian')
-    ax1.plot([0,43],[line,line],'r')
-    ax2.plot(afm[line,1:],'o-r',ms=4,lw=1,mfc='none')
-    ax2.patch.set_facecolor('none')
-
-    st.pyplot(fig,clear_figure=True)
-
-
-
-    #fig1 = cropped.plot()
+        line = st.sidebar.slider('Line Profile', 0,5, 0)
+        ColorMinMax = st.markdown(''' <style> div.stSlider > div[data-baseweb = "slider"] > div[data-testid="stTickBar"] > div {
+            background: rgb(1 1 1 / 0%); } </style>''', unsafe_allow_html = True)
+        Slider_Cursor = st.markdown(''' <style> div.stSlider > div[data-baseweb="slider"] > div > div > div[role="slider"]{
+            background-color: rgb(14, 38, 74); box-shadow: rgb(14 38 74 / 20%) 0px 0px 0px 0.2rem;} </style>''', unsafe_allow_html = True)            
+        Slider_Number = st.markdown(''' <style> div.stSlider > div[data-baseweb="slider"] > div > div > div > div
+                                        { color: rgb(14, 38, 74); } </style>''', unsafe_allow_html = True)
+        col = f''' <style> div.stSlider > div[data-baseweb = "slider"] > div > div {{
+            background: linear-gradient(to right, rgb(1, 183, 158) 0%, 
+                                        rgb(1, 183, 158) {line}%, 
+                                        rgba(151, 166, 195, 0.25) {line}%, 
+                                        rgba(151, 166, 195, 0.25) 100%); }} </style>'''
+        ColorSlider = st.markdown(col, unsafe_allow_html = True) 
+        st.pyplot(_plot(afm))
+except IndexError or ValueError:
+        with st.spinner("Loading..."):
+            time.sleep(5)
     
 
 
