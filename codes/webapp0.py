@@ -8,7 +8,7 @@ import glob
 from os import walk
 import time
 from matplotlib.gridspec import GridSpec
-from labexp import experiments
+from nano_lab import experiments
 from mpl_toolkits.axes_grid1 import make_axes_locatable,ImageGrid, AxesGrid
 from matplotlib.gridspec import GridSpec
 import matplotlib as mpl
@@ -33,11 +33,8 @@ st.title("Image analysis from spectro lab (Puppy's Master Thesis)")
 # """)
 
 st.sidebar.markdown("# Parameters")
-
 labs_list = ["nano-lab","spectro-lab-2"]
-
 exp_list = ["afm","nsom"]
-
 select_lab = st.sidebar.selectbox('Select Laboratory',labs_list)
 select_exp = st.sidebar.selectbox('Select Expriment',exp_list)
 
