@@ -33,10 +33,10 @@ ytick.major.size:    4     # major tick size in points
 ytick.minor.size:    2   # minor tick size in points
 
 
-xtick.major.width: 1
-ytick.major.width: 1
-xtick.minor.width: 1
-ytick.minor.width: 1
+#xtick.major.width: 1
+#ytick.major.width: 1
+#xtick.minor.width: 1
+#ytick.minor.width: 1
 
 
                                    # separator in the fr_FR locale.
