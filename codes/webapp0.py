@@ -25,7 +25,14 @@ from plotly.subplots import make_subplots
 def plotdata(afm,lockin,multimeter,**kwargs):
     fig = make_subplots(
         rows=1, cols=3,
-        specs=[[{'type': 'surface'}, {'type': 'surface'},{'type': 'surface'}]])
+        specs=[[{'type': 'surface'}, {'type': 'surface'},{'type': 'surface'}]],
+        horizontal_spacing = 0.02,
+         subplot_titles=["AFM","LockIn","Multimeter"],
+         shared_xaxes=True,
+         shared_yaxes=True,
+         column_widths=[300,300,300],
+         row_heights=[300],)
+
     # Generate data
     nx = afm.shape[0]
     ny = afm.shape[1]
@@ -37,7 +44,7 @@ def plotdata(afm,lockin,multimeter,**kwargs):
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
 
     fig.add_trace(
-        go.Surface(x=x, y=y, z=lockin, colorscale='Plotly3',showscale=False),
+        go.Surface(x=x, y=y, z=lockin, colorscale='Plotly3',showscale=False,),
         row=1, col=2)
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
 
@@ -47,29 +54,28 @@ def plotdata(afm,lockin,multimeter,**kwargs):
     fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
 
     fig.update_layout(
-        title_text='AFM, Lockin, Multimeter data results',autosize=True,
-        height=500,
-        width=900,
-        #margin=dict(l=50, r=50, b=30, t=35)
-    )
+        template="plotly_dark",
+        width=1300,
+        margin=dict(l=5, r=5, b=10, t=20),
+        scene2 = dict( xaxis_title='x (nm)', 
+                yaxis_title='y (nm)'))
+
+    fig.update_layout(scene_aspectmode='auto')
+    fig.update_layout(scene2_aspectmode='auto')
+    fig.update_layout(scene3_aspectmode='auto')
+        
+  
     return fig
 
 apptitle = "Puppy's Analysis"
 st.set_page_config(page_title=apptitle, page_icon=":blue_heart:")
 st.title("Image analysis from spectro lab (Puppy's Master Thesis)")
-st.write('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
+st.write('<style>div.block-container{padding-top:0.75rem;}</style>', unsafe_allow_html=True)
 
 # st.markdown("""
 #  * Use the menu at left to select data and set plot parameters
 #  * Your plots will appear below
 # """)
-st.markdown("""
-  <style>
-    .css-znku1x.e16nr0p33 {
-      margin-top: -1000px;
-    }
-  </style>
-""", unsafe_allow_html=True)
 st.sidebar.markdown("# Parameters")
 labs_list = ["nano-lab","spectro-lab-2"]
 exp_list = ["nsom"]
@@ -81,7 +87,8 @@ def get_list_samples():
     path = path+'/'+select_lab
     folder_samples=[]
     for folders in glob.glob(path+'/*'):
-        folder_samples.append(folders.split(path)[-1])
+        folder_samples.append(folders.split(path)[-1].split('/')[-1])
+
     return folder_samples
 
 
@@ -104,14 +111,9 @@ try:
         multimeter =  exptoanalysis.multimeter
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
+        
         st.plotly_chart(plotdata(afm,lockin,multimeter))
         
-
-
-
-
-
-
 
 
 except IndexError or ValueError:
