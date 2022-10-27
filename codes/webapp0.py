@@ -30,7 +30,7 @@ def plotdata(afm,lockin,multimeter,**kwargs):
          subplot_titles=["AFM","LockIn","Multimeter"],
          shared_xaxes=True,
          shared_yaxes=True,
-         column_widths=[300,300,300],
+         column_widths=[400,400,400],
          row_heights=[300],)
 
     # Generate data
@@ -38,32 +38,50 @@ def plotdata(afm,lockin,multimeter,**kwargs):
     ny = afm.shape[1]
     x = np.arange(0, nx, 1)
     y = np.arange(0, ny, 1)
-    fig.add_trace(
-        go.Surface(x=x, y=y, z=afm, colorscale='Plotly3',showscale=False),
-        row=1, col=1)
-    fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
+    # fig.add_trace(
+    #     go.Surface(x=x, y=y, z=afm, colorscale='Plotly3',showscale=False),
+    #     row=1, col=1)
+    # fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
+    # fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
 
-    fig.add_trace(
-        go.Surface(x=x, y=y, z=lockin, colorscale='Plotly3',showscale=False,),
-        row=1, col=2)
-    fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
+    # fig.add_trace(
+    #     go.Surface(x=x, y=y, z=lockin, colorscale='Plotly3',showscale=False,),
+    #     row=1, col=2)
+    # fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
+    # fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
 
-    fig.add_trace(
-        go.Surface(x=x, y=y, z=multimeter, colorscale='Plotly3',showscale=False),
-        row=1, col=3)
-    fig.update_traces(contours_z=dict(show=True, usecolormap=True,highlightcolor="limegreen", project_z=True))
+    # fig.add_trace(
+    #     go.Surface(x=x, y=y, z=multimeter, colorscale='Plotly3',showscale=False),
+    #     row=1, col=3)
+    # fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
+    # fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
+
+    # fig.update_layout(
+    #     template="plotly_dark",
+    #     width=1300,
+    #     margin=dict(l=5, r=5, b=10, t=20),
+    #     scene2 = dict( xaxis_title='x (nm)', 
+    #             yaxis_title='y (nm)'))
+
+    exp2plots = [afm,lockin,multimeter]
+    for i,expriment in enumerate(exp2plots):
+        fig.add_trace(
+            go.Surface( z=expriment, colorscale='Plotly3',showscale=False),row=1, col=i+1)
+        fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
+        fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
 
     fig.update_layout(
         template="plotly_dark",
         width=1300,
-        margin=dict(l=5, r=5, b=10, t=20),
-        scene2 = dict( xaxis_title='x (nm)', 
-                yaxis_title='y (nm)'))
-
-    fig.update_layout(scene_aspectmode='auto')
-    fig.update_layout(scene2_aspectmode='auto')
-    fig.update_layout(scene3_aspectmode='auto')
-        
+        xaxis_title=r'$x$ (nm)',
+        yaxis_title=r'$y (nm)$',
+        font=dict(
+            family="Computer Modern Roman,serif",
+            color='black',
+            size=13,
+        ),
+         margin=dict(l=5, r=5, b=10, t=20),
+    )
   
     return fig
 
@@ -77,11 +95,11 @@ st.write('<style>div.block-container{padding-top:0.75rem;}</style>', unsafe_allo
 #  * Your plots will appear below
 # """)
 st.sidebar.markdown("# Parameters")
+st.write('<style>div.block-container{padding-top:-4rem;}</style>', unsafe_allow_html=True)
 labs_list = ["nano-lab","spectro-lab-2"]
 exp_list = ["nsom"]
 select_lab = st.sidebar.selectbox('Select Laboratory',labs_list)
 select_exp = st.sidebar.selectbox('Select Expriment',exp_list)
-
 def get_list_samples():
     path='/media/labfiles/lab-exps'
     path = path+'/'+select_lab
@@ -111,11 +129,10 @@ try:
         multimeter =  exptoanalysis.multimeter
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
+        refresh_server=st.sidebar.button('Update current experiment')
         
         st.plotly_chart(plotdata(afm,lockin,multimeter))
         
-
-
 except IndexError or ValueError:
         with st.spinner("Loading..."):
             time.sleep(5)
