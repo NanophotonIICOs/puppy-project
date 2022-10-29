@@ -38,6 +38,8 @@ def plotdata(afm,lockin,multimeter,**kwargs):
     ny = afm.shape[1]
     x = np.arange(0, nx, 1)
     y = np.arange(0, ny, 1)
+    xt =np.arange(x[0],x[-1],7)
+
     # fig.add_trace(
     #     go.Surface(x=x, y=y, z=afm, colorscale='Plotly3',showscale=False),
     #     row=1, col=1)
@@ -66,21 +68,28 @@ def plotdata(afm,lockin,multimeter,**kwargs):
     exp2plots = [afm,lockin,multimeter]
     for i,expriment in enumerate(exp2plots):
         fig.add_trace(
-            go.Surface( z=expriment, colorscale='Plotly3',showscale=False),row=1, col=i+1)
+            go.Surface( z=expriment, colorscale='Plotly3',showscale=False,reversescale=True),row=1, col=i+1)
         fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
         fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
 
     fig.update_layout(
         template="plotly_dark",
         width=1300,
-        xaxis_title=r'$x$ (nm)',
-        yaxis_title=r'$y (nm)$',
         font=dict(
             family="Computer Modern Roman,serif",
             color='black',
             size=13,
         ),
          margin=dict(l=5, r=5, b=10, t=20),
+         scene=dict(
+    xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,),
+    yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,)),
+    scene2=dict(
+    xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,),
+    yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,)),
+    scene3=dict(
+    xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,),
+    yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=xt*100,tickvals=xt,)),
     )
   
     return fig
@@ -114,6 +123,7 @@ with st.sidebar:
     sample=st.selectbox('Select sample',get_list_samples())
     exp = experiments(select_lab,select_exp,sample,False)
     noexp = st.selectbox("Select Measurement",exp.dframe['Name Dir'].tolist())
+    step  = st.text_input('Step','(nm)')
 
 count=0
 for i in exp.dframe['Name Dir'].tolist():
