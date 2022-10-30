@@ -50,7 +50,6 @@ def plotdata(afm,lockin,multimeter,**kwargs):
             go.Surface( z=expriment, colorscale='Plotly3',showscale=False,reversescale=True),row=1, col=i+1)
         #fig.update_traces(contours_x=dict(show=True, usecolormap=True, project_x=True))
         #fig.update_traces(contours_y=dict(show=True, usecolormap=True, project_y=True))
-
     fig.update_layout(
         template="plotly_dark",
         width=1300,
