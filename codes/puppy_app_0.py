@@ -44,6 +44,10 @@ with st.sidebar:
     sample=st.selectbox('Select sample',get_list_samples())
     exp = experiments(select_lab,select_exp,sample,False)
     noexp = st.selectbox("Select Measurement",exp.dframe['Name Dir'].tolist())
+    try:
+            step  = st.sidebar.number_input('Step (nm)',min_value=10,max_value=1000,step=10,key=int)
+    except:
+            step = 1
     exptype = st.selectbox('Experiment',['afm','lockin','multimeter'])
 
 
@@ -61,12 +65,9 @@ try:
         multimeter =  exptoanalysis.multimeter
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
-        try:
-            step  = st.sidebar.number_input('Step (nm)',min_value=10,max_value=1000,step=10,key=int)
-        except:
-            step = 1
         aplot = plotts.plotts(afm,lockin,multimeter,step=step)
         with st.container():
+            st.header(exptype.upper())
             st.plotly_chart(aplot.plotall(exptype,step=step))
           
             
