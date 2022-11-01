@@ -14,11 +14,13 @@ class plotts:
         self.step = step
         self.nx = self.afm.shape[0]
         self.ny = self.afm.shape[1]
-        self.x, self.y = np.meshgrid(np.arange(0, self.nx, 1), np.arange(0, self.ny, 1))
-        # self.xt =np.arange(self.x[0],self.x[-1],1)
-        # self.yt =np.arange(self.y[0],self.y[-1],1)
-        # self.xtl = self.xt*self.step
-        # self.ytl = self.yt*self.step
+        self.xm, self.ym = np.meshgrid(np.arange(0, self.nx, 1), np.arange(0, self.ny, 1))
+        self.x = np.arange(0, self.nx, 1)
+        self.y = np.arange(0, self.ny, 1)
+        self.xt =np.arange(self.x[0],self.x[-1],2)
+        self.yt =np.arange(self.y[0],self.y[-1],2)
+        self.xtl = self.xt*self.step
+        self.ytl = self.yt*self.step
 
     def plotting(self,**kwargs):
         fig = make_subplots(
@@ -34,22 +36,13 @@ class plotts:
 
 
         fig.update_layout(
-            template="plotly_dark",
+            #template="plotly_dark",
             #width=1200,
             font=dict(
                 family="Computer Modern Roman,serif",
                 color='white',
                 size=13,
             ),
-            # scene=dict(
-            # xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=self.xtl,tickvals=self.xt,tickprefix= "nm",),
-            # yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=self.ytl,tickvals=self.yt,tickprefix= "nm",)),
-            # scene2=dict(
-            # xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=self.xtl,tickvals=self.xt,tickprefix= "nm",),
-            # yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=self.ytl,tickvals=self.yt,tickprefix= "nm",)),
-            # scene3=dict(
-            # xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=self.xtl,tickvals=self.xt,tickprefix= "nm",),
-            # yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=self.ytl,tickvals=self.yt,tickprefix= "nm",)),
         )
         return fig
 
@@ -57,37 +50,55 @@ class plotts:
         fig = make_subplots(
                 rows=2, cols=2, 
                 column_widths=[0.6, 0.4],
-                row_heights=[0.6, 0.4],
+                row_heights=[0.5, 0.5],
                 specs=[[{'type': 'surface','rowspan':2},{'type': 'contour'}],
                     [None, {'type':'scatter'}]],
-                horizontal_spacing=0.03,
-                vertical_spacing=0.05,
+                horizontal_spacing=0.075,
+                vertical_spacing=0.01,
                 shared_xaxes=True,
+                print_grid=False,
                 )
             # Generate data
         if exp=='afm':
-            fig.add_trace(go.Surface(z=self.afm, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
+            fig.add_trace(go.Surface(z=self.afm.T, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
             fig.add_trace(go.Heatmap(z=self.afm.T, colorscale='Plotly3',reversescale=True,connectgaps=True, zsmooth='best'),row=1, col=2)
-            fig.add_trace(go.Scatter(x=self.x[0],y=self.afm[:,5]),row=2,col=2)
+            fig.add_trace(go.Scatter(x=self.xm[0],y=self.afm[:,5],
+                                    mode='lines',
+                                    name='%s Profile'%(exp.upper()),
+                                    line=dict(color='royalblue',width=3)),row=2,col=2)
         elif exp=='lockin':
-            fig.add_trace(go.Surface(z=self.lockin, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
+            fig.add_trace(go.Surface(z=self.lockin.T, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
             fig.add_trace(go.Heatmap(z=self.lockin.T, colorscale='Plotly3',reversescale=True,connectgaps=True, zsmooth='best'),row=1, col=2)
-            fig.add_trace(go.Scatter(x=self.x[0],y=self.lockin[:,5]),row=2,col=2)
+            fig.add_trace(go.Scatter(x=self.xm[0],y=self.lockin[:,5],
+                                    mode='lines',
+                                    name='%s Profile'%(exp.upper()),
+                                    line=dict(color='royalblue',width=3)),row=2,col=2)
         elif exp=='multimeter':
-            fig.add_trace(go.Surface(z=self.multimeter, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
+            fig.add_trace(go.Surface(z=self.multimeter.T, colorscale='Plotly3',showscale=False, reversescale=True),row=1, col=1)
             fig.add_trace(go.Heatmap(z=self.multimeter.T, colorscale='Plotly3',reversescale=True,connectgaps=True, zsmooth='best'),row=1, col=2)
-            fig.add_trace(go.Scatter(x=self.x[0] ,y=self.multimeter[:,5]),row=2,col=2)
+            fig.add_trace(go.Scatter(x=self.xm[0],y=self.multimeter[:,5],
+                                    mode='lines',
+                                    name='%s Profile'%(exp.upper()),
+                                    line=dict(color='royalblue',width=3)),row=2,col=2)
 
         fig.update_layout(
-            template="plotly_dark",
-             autosize=True,
-        margin=dict(l=5, r=5, b=25, t=20),
-            width=1000,
-            # height=500,
+            autosize=True,
+            margin=dict(l=5, r=5, b=25, t=20),
+            width=800,height=500,
             font=dict(
-                family="Latin Modern Roman,serif",
+                family="Times New Roman",
                 color='white',
                 size=13,
             ),   
+            xaxis2 = dict(title='x (nm)',tickvals=self.xt,ticktext=self.xtl),
+            yaxis1 = dict(title=' ',tickvals=[]),
+
+            scene=dict(
+            xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=self.xtl,tickvals=self.xt,tickprefix= "nm",),
+            yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=self.ytl,tickvals=self.yt,tickprefix= "nm",)),
         )
+        # fig.update_layout({
+        #     'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        #     'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+        #     })
         return fig
