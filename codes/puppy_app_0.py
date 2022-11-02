@@ -32,6 +32,7 @@ exp_list = ["nsom"]
 select_lab = st.sidebar.selectbox('Select Laboratory',labs_list)
 select_exp = st.sidebar.selectbox('Select Expriment',exp_list)
 
+@st.cache
 def get_list_samples():
     path='/media/labfiles/lab-exps'
     path = path+'/'+select_lab
@@ -50,7 +51,7 @@ with st.sidebar:
             step  = st.sidebar.number_input('Step (nm)',min_value=10,max_value=1000,step=10,key=int)
     except:
             step = 1
-    exptype = st.selectbox('Experiment',['afm','lockin','multimeter'])
+    plottypes = st.selectbox('Type of plots',['By sections','All 3D'])
 
 count=0
 for i in exp.dframe['Name Dir'].tolist():
@@ -67,9 +68,13 @@ try:
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
         aplot = plotts.plotts(afm,lockin,multimeter,step=step)
-        with st.container():
-             st.header(exptype.upper())
-             st.plotly_chart(aplot.plotall(exptype,step=step))
+        if plottypes == 'All 3D':
+            st.plotly_chart(aplot.plotting(),use_container_width=False)
+        elif plottypes == 'By sections':
+             exptype = st.sidebar.selectbox('Experiment',['afm','lockin','multimeter'])
+             with st.container():
+                    st.header(exptype.upper())
+                    st.plotly_chart(aplot.plotall(exptype,step=step),use_container_width=True)
           
 except IndexError or ValueError:
         with st.spinner("Loading..."):
