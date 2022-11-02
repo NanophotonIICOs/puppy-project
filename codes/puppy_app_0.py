@@ -31,6 +31,7 @@ labs_list = ["nano-lab","spectro-lab-2"]
 exp_list = ["nsom"]
 select_lab = st.sidebar.selectbox('Select Laboratory',labs_list)
 select_exp = st.sidebar.selectbox('Select Expriment',exp_list)
+
 def get_list_samples():
     path='/media/labfiles/lab-exps'
     path = path+'/'+select_lab
@@ -39,6 +40,7 @@ def get_list_samples():
         folder_samples.append(folders.split(path)[-1].split('/')[-1])
 
     return folder_samples
+
 
 with st.sidebar:
     sample=st.selectbox('Select sample',get_list_samples())
@@ -49,7 +51,6 @@ with st.sidebar:
     except:
             step = 1
     exptype = st.selectbox('Experiment',['afm','lockin','multimeter'])
-
 
 count=0
 for i in exp.dframe['Name Dir'].tolist():
@@ -67,10 +68,9 @@ try:
         #st.pyplot(animate(line))
         aplot = plotts.plotts(afm,lockin,multimeter,step=step)
         with st.container():
-            st.header(exptype.upper())
-            st.plotly_chart(aplot.plotall(exptype,step=step))
+             st.header(exptype.upper())
+             st.plotly_chart(aplot.plotall(exptype,step=step))
           
-            
 except IndexError or ValueError:
         with st.spinner("Loading..."):
             time.sleep(5)
