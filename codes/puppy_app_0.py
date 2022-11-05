@@ -19,7 +19,7 @@ import math
 mpl.rcParams.update(mpl.rcParamsDefault)
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import plotts as plotts
+import plotts as puppy
 
 apptitle = "Puppy's Analysis"
 st.set_page_config(page_title=apptitle, page_icon=":blue_heart:")
@@ -67,7 +67,7 @@ try:
         multimeter =  exptoanalysis.multimeter
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
-        aplot = plotts.plotts(afm,lockin,multimeter,step=step)
+        aplot = puppy.puppy(afm,lockin,multimeter,step=step)
         if plottypes == 'All 3D':
             st.plotly_chart(aplot.plotting(),use_container_width=False)
         elif plottypes == 'By sections':

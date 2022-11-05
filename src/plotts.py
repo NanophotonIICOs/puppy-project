@@ -149,8 +149,8 @@ class plotts:
                                     name='%s Profile'%(exp.upper()),
                                     line=dict(color='royalblue',width=3)),row=2,col=2)
             fig.add_trace(go.Surface(z=list(expsoffsets.z_offset),  # type: ignore
-                x=list(expsoffsets.y),
-                y=list(expsoffsets.x),
+                x=list(expsoffsets.x),
+                y=list(expsoffsets.y),
                 colorscale='Plotly3',
                 showscale=False, reversescale=True,
                 surfacecolor=expsoffsets.colorsurfz),row=1, col=1)
@@ -164,8 +164,8 @@ class plotts:
                                     name='%s Profile'%(exp.upper()),
                                     line=dict(color='royalblue',width=3)),row=2,col=2)
             fig.add_trace(go.Surface(z=list(expsoffsets.z_offset),  # type: ignore
-                x=list(expsoffsets.y),
-                y=list(expsoffsets.x),
+                x=list(expsoffsets.x),
+                y=list(expsoffsets.y),
                 colorscale='Plotly3',
                 showscale=False, reversescale=True,
                  surfacecolor=expsoffsets.colorsurfz),row=1, col=1)
