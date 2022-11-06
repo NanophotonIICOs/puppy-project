@@ -1,13 +1,11 @@
-import os
+import numpy as np
 import glob
 from tabulate import tabulate
-from datetime import date
 import pandas as pd
-import numpy as np
 import h5py as h5
 from os import walk
-from IPython.display import display, clear_output
-import math 
+from IPython.display import clear_output
+
 
 class experiments:
     def __init__(self,lab,exptype,sample,printtable=True):
@@ -25,28 +23,33 @@ class experiments:
         self.dirnames=[]
         self.folder_samples=[]
         self.sample = sample
-        self.alldata=[]
         self.measures=[]
+        self.attribs = []
+        self.lab = lab
     
-        self.path = self.path+'/'+lab
+        self.path = self.path+'/'+self.lab
         for folders in glob.glob(self.path+'/*'):
              self.folder_samples.append(folders)
 
+        dsets = []
         for (dirpath, dirnames, filenames) in walk(self.path):
             if self.sample in dirpath:
                 clear_output(wait=True)
-                self.datac=[]
                 self.namef=[]
-                dsets = []
                 for name in sorted(glob.glob(dirpath+'/*.h5')):
+                    self.datac=[]
                     if self.exptype in name:
                         self.measures.append(name.split('/')[-1])
                         self.namef.append(name)
                         opendat = h5.File(name,'r')
+                        attr_dict={}
                         for iset in opendat.keys():
                             dsets.append(iset)
                             for jset in opendat[iset].keys():
                                  self.datac.append(np.array(opendat[iset][jset]))
+                                 for attr in opendat[iset][jset].attrs.keys():
+                                    attr_dict[attr]= opendat[iset][jset].attrs[attr]
+                        self.attribs.append(attr_dict)                    
                     self.data.append(self.datac)
                     self.filesname.append(self.namef)
                     self.pathname.append(dirpath)
@@ -57,31 +60,25 @@ class experiments:
             print(tabulate(self.ptable,self.headers,tablefmt="github",colalign=("center","left")))
     
         self.dframe = pd.DataFrame(self.ptable,columns=self.headers)
+    
 
-                    
-class afm_nsom:
-    def __init__(self,alldata,measure):
-        self.alldata=alldata
-        self.measure = measure
-        self.afm_nsom_data = self.alldata[self.measure][0]
-        self.amplitud = self.alldata[self.measure][1]
-        self.fase = self.alldata[self.measure][2]
-        self.xi=0;self.xf=self.afm_nsom_data.shape[1]
-        self.yi=0;self.yf=self.afm_nsom_data.shape[0]
-        self.afm         = self.afm_nsom_data[:,:,0]
-        self.lockin      =  self.afm_nsom_data[:,:,1]
-        self.multimeter  =  self.afm_nsom_data[:,:,2]
+    def afm_nsom_data(self,measure):
+        afm_nsom_data =  self.data[measure][0]
+        afm          =   afm_nsom_data[:,:,0]
+        lockin       =   afm_nsom_data[:,:,1]
+        multimeter   =   afm_nsom_data[:,:,2]
+        return afm, lockin, multimeter
+    
+    def exps_attr(self,measure):
+        return self.attribs[measure]
 
-
-
-def new_axislabels(ax,step):
-    newlabels=[labels*step for labels in ax.get_xticks().tolist()]
-    return newlabels
-
-def nsom_minoff(z,minoff):
-    mo = math.floor(math.log(abs(z.min()), 10))
-    minz = float("%fe%d"%(z.min(),mo))
-    mominz = float("1e%d"%(mo))
-    return  (minoff*mominz)
+    def amp_fase_data(self,measure):
+        try:
+             amplitud = self.data[measure][1]
+             fase     = self.data[measure][2]
+             return amplitud, fase
+        except:
+             return None
+       
 
 

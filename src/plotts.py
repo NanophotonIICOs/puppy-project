@@ -107,11 +107,11 @@ class plotts:
     def plotall(self,exp='afm',**kwargs):
         fig = make_subplots(
                 rows=2, cols=2, 
-                column_widths=[0.6, 0.4],
-                row_heights=[0.5, 0.5],
+                column_widths=[0.7, 0.3],
+                row_heights=[0.6, 0.4],
                 specs=[[{'type': 'surface','rowspan':2},{'type': 'contour'}],
                     [None, {'type':'scatter'}]],
-                horizontal_spacing=0.075,
+                horizontal_spacing=0.0,
                 vertical_spacing=0.01,
                 shared_xaxes=True,
                 print_grid=False,
@@ -173,7 +173,8 @@ class plotts:
         fig.update_layout(
             autosize=True,
             margin=dict(l=5, r=5, b=25, t=20),
-            width=900,height=500,
+            width=900,
+            height=500,
             font=dict(
                 family="Times New Roman",
                 color='white',
