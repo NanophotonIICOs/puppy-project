@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import requests, os
 import h5py as h5
 import glob
 from os import walk
@@ -15,15 +14,21 @@ from mpl_toolkits.mplot3d import axes3d
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import matplotlib.gridspec as gridspec
 import matplotlib.animation as animation
-import math
-mpl.rcParams.update(mpl.rcParamsDefault)
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotts as puppy
+from PIL import Image
+
+imicon = Image.open("images/diamond_2.png")
+
 
 apptitle = "Puppy's Analysis"
-st.set_page_config(page_title=apptitle, page_icon=":blue_heart:")
-st.title("Image analysis from spectro lab (Puppy's Master Thesis)")
+st.set_page_config(page_title=apptitle, 
+                    layout='wide', 
+                    page_icon=imicon)
+
+st.title("IICO Spectroscopy Experimental Data Analysis (Puppy's Master Thesis)")
+st.markdown("Use the menu left to choice ")
 st.write('<style>div.block-container{padding-top:0.75rem;}</style>', unsafe_allow_html=True)
 st.sidebar.markdown("# Parameters")
 st.write('<style>div.block-container{padding-top:-4rem;}</style>', unsafe_allow_html=True)
@@ -67,7 +72,7 @@ try:
         multimeter =  exptoanalysis.multimeter
         #line = st.sidebar.slider('Line Profile', 0,17, 0)
         #st.pyplot(animate(line))
-        aplot = puppy.puppy(afm,lockin,multimeter,step=step)
+        aplot = puppy.plotts(afm,lockin,multimeter,step=step)
         if plottypes == 'All 3D':
             st.plotly_chart(aplot.plotting(),use_container_width=False)
         elif plottypes == 'By sections':
