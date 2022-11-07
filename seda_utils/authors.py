@@ -55,7 +55,7 @@ def contact_developers():
     # making distance
     st.markdown("<p style=margin-top:190px;padding-bottom:-50px/>",
                 unsafe_allow_html=True, )
-    st.markdown('#### We will appreciate :raised_hands: any feedback from you, please contact:')
+    st.markdown('')
     # st.markdown("<p " + authors_css + ">" + "We will appreciate any feedback from you, please contact:</p>",
     #             unsafe_allow_html=True,)
     st.markdown(

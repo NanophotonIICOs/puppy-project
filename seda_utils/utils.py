@@ -7,7 +7,6 @@ import pandas as pd
 import peakutils
 import glob
 from nano_lab import experiments
-
 def trim_spectra(df):
     # trim raman shift range
     min_, max_ = int(float(df.index.min())), int(float(df.index.max())) + 1
@@ -19,8 +18,8 @@ def trim_spectra(df):
 
 
 @st.cache
-def show_logo(width, padding, margin):
-    with open('images/iico.png', 'rb') as f:
+def show_iico_logo(width, padding, margin):
+    with open('seda_icons/iico.png', 'rb') as f:
         data = f.read()
     link = 'https://www.iico.uaslp.mx/#gsc.tab=0'
     padding_top, padding_right, padding_bottom, padding_left = padding
@@ -48,13 +47,13 @@ def show_logo(width, padding, margin):
 
 
 @st.cache
-def show_sersitivis_logo(width, padding, margin):
+def show_seda_logo(width, padding, margin):
     padding_top, padding_right, padding_bottom, padding_left = padding
     margin_top, margin_right, margin_bottom, margin_left = margin
     
     link = ' '
     
-    with open('images/diamond_2.png', 'rb') as f:
+    with open('seda_icons/diamond_2.png', 'rb') as f:
         data = f.read()
     
     bin_str = base64.b64encode(data).decode()
@@ -166,7 +165,7 @@ def get_chart_vis_properties_vis():
 
 def get_plot_description():
     print_widget_labels('Labels')
-    xaxis = st.text_input('X axis name', r'Raman Shift cm <sup>-1</sup>')
+    xaxis = st.text_input('X axis name', r'x (nm)')
     yaxis = st.text_input('Y axis name', r'Intensity [au]')
     title = st.text_input('Title', r'')
     chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
@@ -246,6 +245,28 @@ def samples(select_lab):
         folder_samples.append(folders.split(path)[-1].split('/')[-1])
 
     return folder_samples
+
+
+#couter to select correct measure, from selectbox
+def counter_measure(chosen_measure,list_measure):
+    count=0
+    for i in list_measure:
+        if i == chosen_measure:
+            break
+        else:
+            count+=1
+    return count
+
+
+@st.cache
+def get_spectra(laboratory,spectra,sample,choosen_measure):
+    exp = experiments(laboratory,spectra,sample,False)
+    data = exp.data
+    dframe = exp.dframe
+    list_measures = dframe['Name Dir'].tolist()
+    sel_measure = counter_measure(choosen_measure,list_measures)
+    afm,nsom,multimeter = exp.afm_nsom_data(sel_measure)
+    return afm,nsom,multimeter
 
 # @st.cache
 # def measures(laboratory,exp_type,sample):
