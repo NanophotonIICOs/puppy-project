@@ -7,14 +7,14 @@ import streamlit as st
 # import str_slider
 # from processing import utils, save_read
 from seda import  sidebar,utils
-# from vis_helpers.vis_utils import print_widgets_separator
+# import utils as utils
 # from visualisation import visualisation_options as vis_opt
 
 
 def visualisation(laboratory):
     #
     # # Spectrometer type `- BWTek / Renishaw / Witec / Wasatch / Teledyne
-    #
+    #´
 
     sample = sidebar.choose_sample(laboratory)
     print(sample)
@@ -23,7 +23,7 @@ def visualisation(laboratory):
     measure = sidebar.choose_measure(laboratory,experiment,sample)
     
     # sidebar separating line
-    #print_widgets_separator(1, sidebar=True)
+    utils.print_widgets_separator(1, sidebar=True)
     
     # User data loader
     # sidebar.print_widget_labels('Upload your data or try with ours', 10, 0)
@@ -40,13 +40,13 @@ def visualisation(laboratory):
     #         files = utils.load_example_files(spectrometer)
     
     # # Check if data loaded, if yes, perform actions
-    # if files:
-    #     st.spinner('Uploading data in progress')
-    #     # sidebar separating line
-    #     print_widgets_separator(1, sidebar=True)
+    if measure:
+        st.spinner('Uploading data in progress')
+    # #     # sidebar separating line
+    #      utils.print_widgets_separator(1, sidebar=True)
     #     df = save_read.files_to_df(files, spectrometer)
     #     # Select chart type
-    #     chart_type = vis_opt.vis_options()
+         #chart_type = vis_opt.vis_options()
         
     #     # sidebar separating line
     #     print_widgets_separator(1, sidebar=True)
@@ -69,12 +69,12 @@ def visualisation(laboratory):
     #     # columns in main view. Chart, expanders
     #     # TODO rozwiązać to jakoś sprytniej
 
-    #     col_left, col_right = st.columns([5, 2])
+        col_left, col_right = st.columns([5, 2])
         
-    #     if chart_type == 'SINGLE':
-    #         with col_left:
-    #             col = st.selectbox('', df.columns)
-    #             df = df[[col]]
+        if chart_type == 'SINGLE':
+            with col_left:
+                col = st.selectbox('', df.columns)
+                df = df[[col]]
         
     #     with col_right:
     #         normalized = False
