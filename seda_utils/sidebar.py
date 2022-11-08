@@ -1,6 +1,6 @@
 import streamlit as st
-from seda import utils
-#from constants import LABELS
+from seda_utils import utils
+from constants import LABELS
 
 from nano_lab import experiments
 
@@ -12,7 +12,7 @@ def sidebar_head():
     """
     st.set_page_config(
         page_title="SEDA IICO",
-        page_icon="images/diamond_2.png",
+        page_icon="seda_icons/diamond_2.png",
         layout="wide",
         initial_sidebar_state="auto"
     )
@@ -20,7 +20,7 @@ def sidebar_head():
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     # SERSitivis logo
-    html_code = utils.show_sersitivis_logo(100, [1, 1, 1, 1], margin=[0, 0, 0, 0])
+    html_code = utils.show_seda_logo(100, [1, 1, 1, 1], margin=[0, 0, 0, 0])
     st.sidebar.markdown(html_code, unsafe_allow_html=True)
     st.sidebar.markdown('')
     st.sidebar.markdown('')
