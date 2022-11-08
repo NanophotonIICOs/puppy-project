@@ -144,8 +144,6 @@ def fig_3d_2d_layout(data,template,pixel=5,**kwargs):
         template=template,
             autosize=True,
             margin=dict(l=5, r=5, b=25, t=20),
-        # width=1000,
-        # height=500,
         font=dict(
             family="Latin Modern Roman,serif",
             color='white',

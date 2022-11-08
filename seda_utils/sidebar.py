@@ -20,7 +20,7 @@ def sidebar_head():
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     # SERSitivis logo
-    html_code = utils.show_seda_logo(100, [1, 1, 1, 1], margin=[0, 0, 0, 0])
+    html_code = utils.show_seda_logo(70, [0, 0, 0, 0], margin=[0, 0, 0, 15])
     st.sidebar.markdown(html_code, unsafe_allow_html=True)
     st.sidebar.markdown('')
     st.sidebar.markdown('')
@@ -42,13 +42,13 @@ def choose_sample(laboratory):
         "Sample",
         samples,
         #format_func=LABELS.get,
-        #index=0
+        index=0
         )
     return s_samples
 
 
 def nano_lab_choose_spectra_type():
-    spectra_types = ['afm','nsom']
+    spectra_types = ['nsom','afm']
     spectrometer = st.sidebar.selectbox(
         "Spectra type",
         spectra_types,

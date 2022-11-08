@@ -4,7 +4,6 @@ from PIL import Image
 
 
 def main_page():
-    imicon = Image.open("seda_icons/diamond_2.png")
     seda_logo = utils.show_seda_logo(width=65, padding=[0, 6, 20, 25], margin=[0, 0, 30, 0])
     st.markdown(seda_logo, unsafe_allow_html=True)
     

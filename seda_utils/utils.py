@@ -1,12 +1,13 @@
 import base64
-
 import plotly.express as px
 import plotly.io as pio
+import numpy as np
 import streamlit as st
 import pandas as pd
 import peakutils
 import glob
 from nano_lab import experiments
+
 def trim_spectra(df):
     # trim raman shift range
     min_, max_ = int(float(df.index.min())), int(float(df.index.max())) + 1
@@ -156,10 +157,10 @@ def get_chart_vis_properties_vis():
     if st.checkbox('Reversed', False):
         palette = palette[::-1]
 
-    print_widgets_separator(2)
+    print_widgets_separator(1)
     print_widget_labels('Template')
     template = choose_template()
-    print_widgets_separator(2)
+    print_widgets_separator(1)
 
     return palette, template
 
@@ -208,34 +209,6 @@ def print_widget_labels(widget_title, margin_top=5, margin_bottom=10):
         unsafe_allow_html=True)
 
 
-def subtract_baseline_and_smoothen(df, vals, cols_name=False):
-    """
-    Subtracting baseline from original df, and smoothing the curve using rolling average
-    :param df: Original DataFrame
-    :param vals: polynomial degree and window for rolling average both Int
-    :param cols_name:  Boolean
-    :return: DataFrame
-    """
-    baselines = pd.DataFrame(index=df.index)
-    baselined = pd.DataFrame(index=df.index)
-    flattened = pd.DataFrame(index=df.index)
-    
-    for col in df.columns:
-        # for baseline correction in PCA module, as there are some differences in input
-        col_name = col
-        if cols_name:
-            col_name = 'col'
-        
-        tmp_spectrum = df[col].dropna()  # trick for data with NaNs
-        tmp_spectrum = pd.Series(peakutils.baseline(tmp_spectrum, vals[col_name][0]), index=tmp_spectrum.index)
-        baselines[col] = tmp_spectrum
-        
-        baselined[col] = df[col] - baselines[col]
-        flattened[col] = baselined[col].rolling(window=vals[col_name][1], min_periods=1, center=True).mean()
-    
-    return df, baselines, baselined, flattened
-
-
 @st.cache
 def samples(select_lab):
     path='/media/labfiles/lab-exps'
@@ -268,10 +241,27 @@ def get_spectra(laboratory,spectra,sample,choosen_measure):
     afm,nsom,multimeter = exp.afm_nsom_data(sel_measure)
     return afm,nsom,multimeter
 
-# @st.cache
-# def measures(laboratory,exp_type,sample):
-#     exp = experiments(laboratory,exp_type,sample,False)
-#     noexp = st.selectbox("Select Measurement",exp.dframe['Name Dir'].tolist())
-#     return exp.dframe['Name Dir'].tolist()
+@st.cache
+def get_attrs(laboratory,spectra,sample,choosen_measure):
+    exp = experiments(laboratory,spectra,sample,False)
+    dframe = exp.dframe
+    list_measures = dframe['Name Dir'].tolist()
+    sel_measure = counter_measure(choosen_measure,list_measures)
+    attrs = exp.exps_attr(sel_measure)
+    return attrs
 
+def pline(data_attrs):
+    """
+    Move profile line aorund sptecra with a x-pixel (matrix element) value
+    :param normalized:
+    :return: Int or Float
+    """
+    xi = int(data_attrs['Inicio X'])
+    xf = int(data_attrs['fin X '])
+    step = int(data_attrs['paso'])
+    xrange = np.arange(xi,xf/step).tolist()
+    xpix =  st.slider('x-pix', 0.0,1.0,2.0)
+    xpix = int(xpix)
+    return xpix
+    
     
