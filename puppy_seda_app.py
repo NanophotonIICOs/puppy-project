@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from seda import authors,main_page,sidebar,visualisation
+from seda_utils import authors,main_page,sidebar,visualisation
 
 import sentry_sdk
 
@@ -16,7 +16,7 @@ if os.path.isfile(".streamlit/secrets.toml"):
     else:
         print('sentry not running')
 else:
-    print('No secrets found')
+    print('Ok')
 
 
 
@@ -73,4 +73,4 @@ if __name__ == '__main__':
 
     main()
 
-    print("puppy ")  
+    #print("puppy ")  
