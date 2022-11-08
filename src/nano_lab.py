@@ -53,7 +53,7 @@ class experiments:
                     self.data.append(self.datac)
                     self.filesname.append(self.namef)
                     self.pathname.append(dirpath)
-                    self.ptable.append([self.count,self.measures[0]])
+                    self.ptable.append([self.count,self.measures[-1]])
                     self.count+=1
                 
         if (self.datac and self.printtable==True):
@@ -80,5 +80,5 @@ class experiments:
         except:
              return None
        
-
+  
 
