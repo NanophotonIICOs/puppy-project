@@ -1,5 +1,5 @@
 import numpy as np
-import glob
+from glob import glob
 from tabulate import tabulate
 import pandas as pd
 import h5py as h5
@@ -28,19 +28,21 @@ class experiments:
         self.measures=[]
         self.attribs = []
         self.lab = lab
+        self.sample_names=[]
     
         self.path = self.path+'/'+self.lab
-        for folders in glob.glob(self.path+'/*'):
+        for folders in glob(self.path+'/*'):
              self.folder_samples.append(folders)
 
         for (dirpath, dirnames, filenames) in walk(self.path):
+            self.namef=[]
             if self.sample in dirpath:
                 clear_output(wait=True)
-                self.namef=[]
                 dsets = []
                 clean_meas=[]
-                for name in sorted(glob.glob(dirpath+'/*.h5')):
+                for name in sorted(glob(dirpath+'/*.h5')):
                     if self.exptype in name:
+                        self.sample_names.append(name)
                         self.measures.append(name.split('/')[-1])
                         self.namef.append(name)
                         opendat = h5.File(name,'r')
@@ -64,10 +66,9 @@ class experiments:
                         self.attribs.append(attr_dict)                     
                         self.data.append(self.datac)
                         self.ptable.append([self.count,self.measures[-1]])
-                        self.filesname.append(self.namef)
                         self.pathname.append(dirpath)
                         self.count+=1
-                
+                self.filesname.append(self.namef)
         # if (self.datac or self.printtable==True):
         #     print(tabulate(self.ptable,self.headers,tablefmt="github",colalign=("center","left")))
         if (self.printtable==True):
@@ -103,3 +104,53 @@ class experiments:
        
   
 
+
+
+class read_data:
+    def __init__(self,lab,exptype,sample,printtable=False,**kwargs):
+        self.path='/media/labfiles/lab-exps'
+        self.headers=['No. Dir','Name Dir']
+        self.exptype=exptype
+        self.printtable=printtable
+        self.sample = sample
+        self.lab = lab
+        self.folder_samples=[]
+        self.exp_meas=[]
+        self.name_meas=[]
+    
+        self.path = self.path+'/'+self.lab
+        for folders in glob(self.path+'/*'):
+             self.folder_samples.append(folders)
+
+        for (dirpath, dirnames, filenames) in walk(self.path):
+            if self.sample in dirpath:
+                clear_output(wait=True)
+                for name in sorted(glob(dirpath+'/*.h5')):
+                    if self.exptype in name:
+                        self.exp_meas.append(name)
+                        self.name_meas.append(name.split('/')[-1])
+        
+        
+    def get_spectra(self,sel_meas):
+        
+        for meas in exp_meas:
+            if self_meas in meas:
+                opendat = h5.File(meas,'r')
+                for iset in opendat.keys():
+                    if len(list(opendat.keys()))>1:
+                        for jset in opendat[iset].keys():
+                            self.meas_data= opendat[iset][jset][:]
+                            for attr in opendat[iset][jset].attrs.keys():
+                                self.attr_dict[attr] = opendat[iset][jset].attrs[attr]
+                
+    
+        
+        return self.meas_attrs, self.meas_data
+            
+                
+                
+
+
+            
+            
+            

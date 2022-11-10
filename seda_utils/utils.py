@@ -18,7 +18,6 @@ def trim_spectra(df):
     return df[mask]
 
 
-@st.cache
 def show_iico_logo(width, padding, margin):
     with open('seda_icons/logo_iico_azul.png', 'rb') as f:
         data = f.read()
@@ -47,7 +46,6 @@ def show_iico_logo(width, padding, margin):
     return html_code
 
 
-@st.cache
 def show_seda_logo(width, padding, margin):
     padding_top, padding_right, padding_bottom, padding_left = padding
     margin_top, margin_right, margin_bottom, margin_left = margin
@@ -222,8 +220,29 @@ def print_widget_labels(widget_title, margin_top=5, margin_bottom=10):
     
 def error_alert():
     st.warning("Error in file",icon="⚠️")
+    
+    
 
-@st.cache
+def get_exp(laboratory,spectra,sample,chosen_meas):
+    class expfiles():pass
+    expfiles = expfiles()
+    exp = experiments(laboratory,spectra,sample)
+    list_meas = exp.meas_list
+    sel_meas =  counter_meas(chosen_meas,list_meas)
+    if spectra == 'nsom':
+        afm,nsom,multimeter = exp.afm_nsom_data(sel_meas)
+        expfiles.afm = afm
+        expfiles.nsom = nsom
+        expfiles.multimeter = multimeter
+    else:
+        afm = exp.afm_nsom_data(sel_meas)
+        expfiles.afm = afm
+
+    attrs = exp.exps_attr(sel_meas)
+    expfiles.list_meas = list_meas
+    expfiles.attrs = attrs
+    return expfiles    
+
 def samples(select_lab):
     path='/media/labfiles/lab-exps'
     path = path+'/'+select_lab
@@ -235,36 +254,33 @@ def samples(select_lab):
 
 
 #couter to select correct measure, from selectbox
-@st.cache
-def counter_measure(chosen_measure,list_measure):
+def counter_meas(chosen_meas,list_meas):
     count=0
-    for i in list_measure:
-        if i == chosen_measure:
+    for i in list_meas:
+        if i == chosen_meas:
             break
         else:
             count+=1
     return count
 
 
-@st.cache
-def get_spectra(laboratory,spectra,sample,choosen_measure):
+def get_spectra(laboratory,spectra,sample,choosen_meas):
     exp = experiments(laboratory,spectra,sample,False)
-    list_measures = exp.meas_list
-    sel_measure = counter_measure(choosen_measure,list_measures)
+    list_meass = exp.meas_list
+    sel_meas = counter_meas(choosen_meas,list_meas)
     if spectra =='nsom':
-        afm,nsom,multimeter = exp.afm_nsom_data(sel_measure)
+        afm,nsom,multimeter = exp.afm_nsom_data(sel_meas)
         return afm,nsom,multimeter
     else:
-        afm = exp.afm_nsom_data(sel_measure)
+        afm = exp.afm_nsom_data(sel_meas)
         return afm
         
 
-@st.cache
-def get_attrs(laboratory,spectra,sample,choosen_measure):
+def get_attrs(laboratory,spectra,sample,choosen_meas):
     exp = experiments(laboratory,spectra,sample,False)
-    list_measures = exp.meas_list
-    sel_measure = counter_measure(choosen_measure,list_measures)
-    attrs = exp.exps_attr(sel_measure)
+    list_meas = exp.meas_list
+    sel_meas = counter_meas(choosen_meas,list_meas)
+    attrs = exp.exps_attr(sel_meas)
     return attrs
 
 def pline(data_attrs):
