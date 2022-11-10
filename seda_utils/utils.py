@@ -20,7 +20,7 @@ def trim_spectra(df):
 
 @st.cache
 def show_iico_logo(width, padding, margin):
-    with open('seda_icons/iico.png', 'rb') as f:
+    with open('seda_icons/logo_iico_azul.png', 'rb') as f:
         data = f.read()
     link = 'https://www.iico.uaslp.mx/#gsc.tab=0'
     padding_top, padding_right, padding_bottom, padding_left = padding
@@ -54,7 +54,7 @@ def show_seda_logo(width, padding, margin):
     
     link = ' '
     
-    with open('seda_icons/diamond_2.png', 'rb') as f:
+    with open('seda_icons/puppy_icon.png','rb') as f:
         data = f.read()
     
     bin_str = base64.b64encode(data).decode()
@@ -84,7 +84,7 @@ def choose_template():
     """
     template = st.selectbox(
         "Chart template",
-        list(pio.templates), index=6, key='new')
+        list(pio.templates), index=2, key='new')
 
     return template
 
@@ -96,7 +96,7 @@ def get_chart_vis_properties():
                         ],
         'diverging': ['Armyrose', 'BrBG', 'Earth', 'Fall', 'Geyser', 'PRGn', 'PiYG', 'Picnic', 'Portland', 'PuOr',
                       'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'Tealrose', 'Temps', 'Tropic', 'balance',
-                      'curl', 'delta', 'oxy',
+                      'curl', 'delta', 'oxy','Plotly3',
                       ],
         'sequential': ['Aggrnyl', 'Agsunset', 'Blackbody', 'Bluered', 'Blues', 'Blugrn', 'Bluyl', 'Brwnyl', 'BuGn',
                        'BuPu', 'Burg', 'Burgyl', 'Cividis', 'Darkmint', 'Electric', 'Emrld', 'GnBu', 'Greens', 'Greys',
@@ -127,6 +127,14 @@ def get_chart_vis_properties():
 
 def get_chart_vis_properties_vis():
     palettes = {
+        'sequential': ['Plotly3','Aggrnyl', 'Agsunset', 'Blackbody', 'Bluered', 'Blues', 'Blugrn', 'Bluyl', 'Brwnyl', 'BuGn',
+                       'BuPu', 'Burg', 'Burgyl', 'Cividis', 'Darkmint', 'Electric', 'Emrld', 'GnBu', 'Greens', 'Greys',
+                       'Hot', 'Inferno', 'Jet', 'Magenta', 'Magma', 'Mint', 'OrRd', 'Oranges', 'Oryel', 'Peach',
+                       'Pinkyl', 'Plasma', 'Plotly3', 'PuBu', 'PuBuGn', 'PuRd', 'Purp', 'Purples', 'Purpor', 'Rainbow',
+                       'RdBu', 'RdPu', 'Redor', 'Reds', 'Sunset', 'Sunsetdark', 'Teal', 'Tealgrn', 'Turbo', 'Viridis',
+                       'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd', 'algae', 'amp', 'deep', 'dense', 'gray', 'haline', 'ice',
+                       'matter', 'solar', 'speed', 'tempo', 'thermal', 'turbid',
+                       ],
         'qualitative': ['Alphabet', 'Antique', 'Bold', 'D3', 'Dark2', 'Dark24', 'G10', 'Light24', 'Pastel',
                         'Pastel1', 'Pastel2', 'Plotly', 'Prism', 'Safe', 'Set1', 'Set2', 'Set3', 'T10', 'Vivid',
                         ],
@@ -134,14 +142,7 @@ def get_chart_vis_properties_vis():
                       'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'Tealrose', 'Temps', 'Tropic', 'balance',
                       'curl', 'delta', 'oxy',
                       ],
-        'sequential': ['Aggrnyl', 'Agsunset', 'Blackbody', 'Bluered', 'Blues', 'Blugrn', 'Bluyl', 'Brwnyl', 'BuGn',
-                       'BuPu', 'Burg', 'Burgyl', 'Cividis', 'Darkmint', 'Electric', 'Emrld', 'GnBu', 'Greens', 'Greys',
-                       'Hot', 'Inferno', 'Jet', 'Magenta', 'Magma', 'Mint', 'OrRd', 'Oranges', 'Oryel', 'Peach',
-                       'Pinkyl', 'Plasma', 'Plotly3', 'PuBu', 'PuBuGn', 'PuRd', 'Purp', 'Purples', 'Purpor', 'Rainbow',
-                       'RdBu', 'RdPu', 'Redor', 'Reds', 'Sunset', 'Sunsetdark', 'Teal', 'Tealgrn', 'Turbo', 'Viridis',
-                       'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd', 'algae', 'amp', 'deep', 'dense', 'gray', 'haline', 'ice',
-                       'matter', 'solar', 'speed', 'tempo', 'thermal', 'turbid',
-                       ]
+        
     }
     print_widget_labels('Colors')
     palette_type = st.selectbox("Type of color palette", list(palettes.keys()) + ['custom'], 0)
@@ -154,8 +155,9 @@ def get_chart_vis_properties_vis():
         palette_module = getattr(px.colors, palette_type)
         palette = getattr(palette_module, palette)
 
-    if st.checkbox('Reversed', False):
+    if st.checkbox('Reversed', True):
         palette = palette[::-1]
+
 
     print_widgets_separator(1)
     print_widget_labels('Template')
@@ -163,6 +165,14 @@ def get_chart_vis_properties_vis():
     print_widgets_separator(1)
 
     return palette, template
+
+
+def tick_step():
+    print_widget_labels('Plot axis options')
+    tsvalue = st.number_input('Axis tick Step',min_value=1,max_value=10,step=1)
+    return int(tsvalue)
+
+
 
 def get_plot_description():
     print_widget_labels('Labels')
@@ -181,6 +191,7 @@ def get_plot_description_pca():
     chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
     return chart_titles
 
+# def axis_step(value):
 def print_widgets_separator(n=1, sidebar=False):
     """
     Prints customized separation line on sidebar
@@ -208,6 +219,9 @@ def print_widget_labels(widget_title, margin_top=5, margin_bottom=10):
         f"""<p style="font-weight:500; margin-top:{margin_top}px;margin-bottom:{margin_bottom}px">{widget_title}</p>""",
         unsafe_allow_html=True)
 
+    
+def error_alert():
+    st.warning("Error in file",icon="⚠️")
 
 @st.cache
 def samples(select_lab):
@@ -221,6 +235,7 @@ def samples(select_lab):
 
 
 #couter to select correct measure, from selectbox
+@st.cache
 def counter_measure(chosen_measure,list_measure):
     count=0
     for i in list_measure:
@@ -234,18 +249,20 @@ def counter_measure(chosen_measure,list_measure):
 @st.cache
 def get_spectra(laboratory,spectra,sample,choosen_measure):
     exp = experiments(laboratory,spectra,sample,False)
-    data = exp.data
-    dframe = exp.dframe
-    list_measures = dframe['Name Dir'].tolist()
+    list_measures = exp.meas_list
     sel_measure = counter_measure(choosen_measure,list_measures)
-    afm,nsom,multimeter = exp.afm_nsom_data(sel_measure)
-    return afm,nsom,multimeter
+    if spectra =='nsom':
+        afm,nsom,multimeter = exp.afm_nsom_data(sel_measure)
+        return afm,nsom,multimeter
+    else:
+        afm = exp.afm_nsom_data(sel_measure)
+        return afm
+        
 
 @st.cache
 def get_attrs(laboratory,spectra,sample,choosen_measure):
     exp = experiments(laboratory,spectra,sample,False)
-    dframe = exp.dframe
-    list_measures = dframe['Name Dir'].tolist()
+    list_measures = exp.meas_list
     sel_measure = counter_measure(choosen_measure,list_measures)
     attrs = exp.exps_attr(sel_measure)
     return attrs
@@ -256,12 +273,18 @@ def pline(data_attrs):
     :param normalized:
     :return: Int or Float
     """
-    xi = int(data_attrs['Inicio X'])
-    xf = int(data_attrs['fin X '])
-    step = int(data_attrs['paso'])
-    xrange = np.arange(xi,xf/step).tolist()
-    xpix =  st.slider('x-pix', 0.0,1.0,2.0)
-    xpix = int(xpix)
-    return xpix
-    
+    if data_attrs:
+        yi = int(data_attrs['Inicio Y'])
+        yf = int(data_attrs['fin Y '])
+        step = int(data_attrs['paso'])
+        yrange = np.arange(yi,yf/step).tolist()
+        yfn = int(yf/step)
+        vdefault  = int((yfn)/2)
+        ypix =  st.slider('y-pix', min_value=yi,
+                        max_value=yfn-1,step=1,value=vdefault)
+        return ypix
+    else :
+        ypix=1
+        return ypix
+        #error_alert()
     

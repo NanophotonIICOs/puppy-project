@@ -14,17 +14,21 @@ from seda_visual import seda_plots  as splots
 def visualisation(laboratory):
     #
 
-    spectra = sidebar.nano_lab_choose_spectra_type()
     choose_sample = sidebar.choose_sample(laboratory)
+    spectra = sidebar.nano_lab_choose_spectra_type()
     choose_measure = sidebar.choose_measure(laboratory,spectra,choose_sample)
     #data
-    afm,nsom,multimeter = utils.get_spectra(laboratory,spectra,choose_sample,choose_measure)
+    if spectra == 'nsom':
+        afm,nsom,multimeter = utils.get_spectra(laboratory,spectra,choose_sample,choose_measure)
+    elif spectra == 'afm':
+        afm = utils.get_spectra(laboratory,spectra,choose_sample,choose_measure)
+        
     data_attrs = utils.get_attrs(laboratory,spectra,choose_sample,choose_measure)
     
     # sidebar separating line
     utils.print_widgets_separator(1, sidebar=True)
     
-    if choose_measure:
+    if spectra:
         st.spinner('Uploading data in progress')
     
         col_left, col_right = st.columns([5, 2])
@@ -34,28 +38,37 @@ def visualisation(laboratory):
             normalized = False
             
     #         # # Plot settings
-            plot_settings = st.expander("Plot settings", expanded=False)
+            plot_settings = st.expander("Plot settings", expanded=True)
             
     #         # # Choose plot colors and templates
             with plot_settings:
+                tsvalue = utils.tick_step()
                 plots_color, template = utils.get_chart_vis_properties_vis()
                 
             range_expander_name = 'Line profile pixel'
-            range_expander = st.expander(range_expander_name, expanded=False)
+            range_expander = st.expander(range_expander_name, expanded=True)
              
             with range_expander:
-               xpix = utils.pline(data_attrs)
+               ypix = utils.pline(data_attrs)
             
             
         
         # Data plotting
             
         with col_left:
-            with st.expander('AFM'):
-                figs=splots.fig_3d_2d_layout(afm,template,xpix)
-                st.plotly_chart(figs,use_container_width=True)
-                
-            with st.expander('NSOM'):
-                figs=splots.fig_3d_2d_layout(nsom,template,xpix)
-                st.plotly_chart(figs,use_container_width=True)
-    
+            if spectra == 'nsom':
+                with st.expander('AFM',expanded=True):
+                    figs=splots.fig_3d_2d_layout(afm,template,data_attrs,ypix,plots_color,tick_step=tsvalue)
+                    st.plotly_chart(figs,use_container_width=True,)
+                    
+                with st.expander('NSOM',expanded=True):
+                    figs=splots.fig_3d_2d_layout(nsom,template,data_attrs,ypix,plots_color,tick_step=tsvalue)
+                    st.plotly_chart(figs,use_container_width=True)
+            elif spectra == 'afm':
+                try:
+                    with st.expander('AFM',expanded=True):
+                        figs=splots.fig_3d_2d_layout(afm,template,data_attrs,ypix,plots_color,tick_step=tsvalue)
+                        st.plotly_chart(figs,use_container_width=True,)
+                except:
+                    pass
+                    

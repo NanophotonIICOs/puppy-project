@@ -7,8 +7,10 @@ from os import walk
 from IPython.display import clear_output
 
 
+    
+
 class experiments:
-    def __init__(self,lab,exptype,sample,printtable=True):
+    def __init__(self,lab,exptype,sample,printtable=False):
         self.path='/media/labfiles/lab-exps'
         self.headers=['No. Dir','Name Dir']
         self.count=0
@@ -31,43 +33,62 @@ class experiments:
         for folders in glob.glob(self.path+'/*'):
              self.folder_samples.append(folders)
 
-        dsets = []
         for (dirpath, dirnames, filenames) in walk(self.path):
             if self.sample in dirpath:
                 clear_output(wait=True)
                 self.namef=[]
+                dsets = []
+                clean_meas=[]
                 for name in sorted(glob.glob(dirpath+'/*.h5')):
-                    self.datac=[]
                     if self.exptype in name:
                         self.measures.append(name.split('/')[-1])
                         self.namef.append(name)
                         opendat = h5.File(name,'r')
                         attr_dict={}
+                        self.datac=[]
                         for iset in opendat.keys():
                             dsets.append(iset)
-                            for jset in opendat[iset].keys():
-                                 self.datac.append(np.array(opendat[iset][jset]))
-                                 for attr in opendat[iset][jset].attrs.keys():
-                                    attr_dict[attr]= opendat[iset][jset].attrs[attr]
-                        self.attribs.append(attr_dict)                    
-                    self.data.append(self.datac)
-                    self.filesname.append(self.namef)
-                    self.pathname.append(dirpath)
-                    self.ptable.append([self.count,self.measures[-1]])
-                    self.count+=1
+                            if len(list(opendat.keys()))>1:
+                                for jset in opendat[iset].keys():
+                                    self.datac.append(np.array(opendat[iset][jset]))
+                                    for attr in opendat[iset][jset].attrs.keys():
+                                        attr_dict[attr]= opendat[iset][jset].attrs[attr]
+                            else:
+                                self.datac.append(np.array(opendat[iset]))
+                                try:
+                                    for attr in opendat[iset].attrs.keys():
+                                        attr_dict[attr]= opendat[iset].attrs[attr]
+                                except:
+                                    pass                       
+                            
+                        self.attribs.append(attr_dict)                     
+                        self.data.append(self.datac)
+                        self.ptable.append([self.count,self.measures[-1]])
+                        self.filesname.append(self.namef)
+                        self.pathname.append(dirpath)
+                        self.count+=1
                 
-        if (self.datac and self.printtable==True):
+        # if (self.datac or self.printtable==True):
+        #     print(tabulate(self.ptable,self.headers,tablefmt="github",colalign=("center","left")))
+        if (self.printtable==True):
             print(tabulate(self.ptable,self.headers,tablefmt="github",colalign=("center","left")))
     
         self.dframe = pd.DataFrame(self.ptable,columns=self.headers)
+        self.meas_list=self.dframe['Name Dir'].tolist()
     
 
     def afm_nsom_data(self,measure):
-        afm_nsom_data =  self.data[measure][0]
-        afm          =   afm_nsom_data[:,:,0]
-        lockin       =   afm_nsom_data[:,:,1]
-        multimeter   =   afm_nsom_data[:,:,2]
-        return afm, lockin, multimeter
+        try:
+            afm_nsom_data =  self.data[measure][0]
+            afm          =   afm_nsom_data[:,:,0]
+            lockin       =   afm_nsom_data[:,:,1]
+            multimeter   =   afm_nsom_data[:,:,2]
+            return afm, lockin, multimeter
+            
+        except IndexError:
+            return self.data[measure][0]
+            
+        
     
     def exps_attr(self,measure):
         return self.attribs[measure]

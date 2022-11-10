@@ -4,7 +4,7 @@ from PIL import Image
 
 
 def main_page():
-    seda_logo = utils.show_seda_logo(width=65, padding=[0, 6, 20, 25], margin=[0, 0, 30, 0])
+    seda_logo = utils.show_seda_logo(width=100, padding=[0, 6, 20, 25], margin=[0, 0, 30, 0])
     st.markdown(seda_logo, unsafe_allow_html=True)
     
     
@@ -17,12 +17,8 @@ def main_page():
     cols = st.columns((3, 3, 1))
     with cols[1]:
         st.subheader("By")
-        st.markdown("")
-        st.markdown("")
-        st.markdown("")
-        st.markdown("")
     
-    iico_logo = utils.show_iico_logo(width=65, padding=[0, 6, 20, 25], margin=[0, 0, 30, 0])
+    iico_logo = utils.show_iico_logo(width=100, padding=[0, 6, 20, 25], margin=[0, 0, 30, 0])
     st.markdown(iico_logo, unsafe_allow_html=True)
     
     st.markdown("")
