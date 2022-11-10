@@ -14,21 +14,28 @@ from seda_visual import seda_plots  as splots
 def visualisation(laboratory):
     #
 
-    choose_sample = sidebar.choose_sample(laboratory)
+    chosen_sample = sidebar.choose_sample(laboratory)
     spectra = sidebar.nano_lab_choose_spectra_type()
-    choose_measure = sidebar.choose_measure(laboratory,spectra,choose_sample)
+    chosen_meas = sidebar.choose_measure(laboratory,spectra,chosen_sample)
     #data
-    if spectra == 'nsom':
-        afm,nsom,multimeter = utils.get_spectra(laboratory,spectra,choose_sample,choose_measure)
-    elif spectra == 'afm':
-        afm = utils.get_spectra(laboratory,spectra,choose_sample,choose_measure)
-        
-    data_attrs = utils.get_attrs(laboratory,spectra,choose_sample,choose_measure)
+    try:
+        exp = utils.get_exp(laboratory, spectra, chosen_sample, chosen_meas)
+        afm = exp.afm
+        nsom = exp.nsom
+        data_attrs = exp.attrs
+    except:
+        exp = utils.get_exp(laboratory, spectra, chosen_sample, chosen_meas)
+        afm = exp.afm
+        data_attrs = exp.attrs
+        with st.expander('Error File'):
+            st.write("This file corresponds to older version, therefore doesn't have nsom experiments")
+            
+
     
     # sidebar separating line
     utils.print_widgets_separator(1, sidebar=True)
     
-    if spectra:
+    if exp:
         st.spinner('Uploading data in progress')
     
         col_left, col_right = st.columns([5, 2])

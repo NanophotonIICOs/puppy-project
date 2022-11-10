@@ -58,11 +58,11 @@ def nano_lab_choose_spectra_type():
 
 def choose_measure(laboratory,experiment,sample):
     try:
-        exp = experiments(laboratory,experiment,sample,False)
-        list_measures = exp.meas_list
+        exp = experiments(laboratory,experiment,sample)
+        list_meas = exp.meas_list[::-1]
         measures = st.sidebar.selectbox(
             "Experiment Measure",
-            list_measures,
+            list_meas,
             index=0)
         return  measures
     except (AttributeError,IndexError):
