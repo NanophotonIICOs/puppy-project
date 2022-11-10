@@ -12,7 +12,7 @@ def sidebar_head():
     """
     st.set_page_config(
         page_title="SEDA IICO",
-        page_icon="seda_icons/diamond_2.png",
+        page_icon="seda_icons/puppy_icon.png",
         layout="wide",
         initial_sidebar_state="auto"
     )
@@ -20,7 +20,7 @@ def sidebar_head():
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     # SERSitivis logo
-    html_code = utils.show_seda_logo(70, [0, 0, 0, 0], margin=[0, 0, 0, 15])
+    html_code = utils.show_seda_logo(80, [0, 0, 0, 0], margin=[0, 0, 0, 15])
     st.sidebar.markdown(html_code, unsafe_allow_html=True)
     st.sidebar.markdown('')
     st.sidebar.markdown('')
@@ -42,7 +42,7 @@ def choose_sample(laboratory):
         "Sample",
         samples,
         #format_func=LABELS.get,
-        index=0
+        index=3
         )
     return s_samples
 
@@ -59,13 +59,12 @@ def nano_lab_choose_spectra_type():
 def choose_measure(laboratory,experiment,sample):
     try:
         exp = experiments(laboratory,experiment,sample,False)
-        list_measures = exp.dframe['Name Dir'].tolist()
+        list_measures = exp.meas_list
         measures = st.sidebar.selectbox(
             "Experiment Measure",
             list_measures,
-            #format_func=LABELS.get,
             index=0)
-        return  measures 
+        return  measures
     except (AttributeError,IndexError):
-        pass 
+        utils.error_alert()
     
