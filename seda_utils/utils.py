@@ -7,6 +7,10 @@ import pandas as pd
 import peakutils
 import glob
 from nano_lab import experiments
+from datetime import date
+from datetime import datetime
+import streamlit_nested_layout
+
 
 def trim_spectra(df):
     # trim raman shift range
@@ -50,13 +54,12 @@ def show_seda_logo(width, padding, margin):
     padding_top, padding_right, padding_bottom, padding_left = padding
     margin_top, margin_right, margin_bottom, margin_left = margin
     
-    link = ' '
-    
     with open('seda_icons/puppy_icon.png','rb') as f:
         data = f.read()
-    
+    link = 'https://github.com/NanophotonIICOs/puppy-project'
     bin_str = base64.b64encode(data).decode()
     html_code = f'''
+                <a href="{link}" target = _blank>
                 <img src="data:image/png;base64,{bin_str}"
                 style="
                      margin: auto;
@@ -167,8 +170,23 @@ def get_chart_vis_properties_vis():
 
 def tick_step():
     print_widget_labels('Plot axis options')
-    tsvalue = st.number_input('Axis tick Step',min_value=1,max_value=10,step=1)
+    tsvalue = st.number_input('Axis tick Step',min_value=1,max_value=10,step=1,value=3)
     return int(tsvalue)
+
+def tick_color():
+    lscolor = ['black','white','red','blue','orange','pink','purple']
+    tscolor  = st.color_picker('Ticks and plot lines color', '#0F06FF')
+    return tscolor
+
+def fig_size():
+    inner_cols = st.columns([1, 1])
+    with inner_cols[0]:
+        fig_width = st.number_input('Figure width:',min_value=500,max_value=1000,value=500,step=100)
+    with inner_cols[1]:
+        fig_height = st.number_input('Figure height:',min_value=500,max_value=1000,value=500,step=100)
+    
+    return fig_width, fig_width
+    
 
 
 
@@ -243,7 +261,18 @@ def get_exp(laboratory,spectra,sample,chosen_meas):
     expfiles.attrs = attrs
     return expfiles    
 
+
+
 def samples(select_lab):
+    path='/media/labfiles/lab-exps'
+    path = path+'/'+select_lab
+    folder_samples=[]
+    for folders in glob.glob(path+'/*'):
+        folder_samples.append(folders.split(path)[-1].split('/')[-1])
+
+    return folder_samples
+
+def sel_samples(select_lab):
     path='/media/labfiles/lab-exps'
     path = path+'/'+select_lab
     folder_samples=[]
@@ -275,7 +304,7 @@ def get_spectra(laboratory,spectra,sample,choosen_meas):
         afm = exp.afm_nsom_data(sel_meas)
         return afm
         
-
+@st.cache
 def get_attrs(laboratory,spectra,sample,choosen_meas):
     exp = experiments(laboratory,spectra,sample,False)
     list_meas = exp.meas_list
@@ -283,12 +312,14 @@ def get_attrs(laboratory,spectra,sample,choosen_meas):
     attrs = exp.exps_attr(sel_meas)
     return attrs
 
+
 def pline(data_attrs):
     """
     Move profile line aorund sptecra with a x-pixel (matrix element) value
     :param normalized:
     :return: Int or Float
     """
+    
     if data_attrs:
         yi = int(data_attrs['Inicio Y'])
         yf = int(data_attrs['fin Y '])
@@ -297,10 +328,68 @@ def pline(data_attrs):
         yfn = int(yf/step)
         vdefault  = int((yfn)/2)
         ypix =  st.slider('y-pix', min_value=yi,
-                        max_value=yfn-1,step=1,value=vdefault)
+                        max_value=yfn,step=1,value=vdefault)
         return ypix
     else :
         ypix=1
         return ypix
         #error_alert()
+    
+
+@st.cache
+def get_data_spectra(exp,sel_meas):
+    meas = exp.exp_meas
+    if meas:
+        attrs, data = exp.get_spectra(sel_meas)
+        if data[0].ndim>2:
+            afm  = data[0][:,:,0]
+            nsom = data[0][:,:,1]
+            return afm, nsom, attrs
+        else:
+            afm = data[0]
+            return afm, attrs
+
+    
+    
+def data_properties(attrs):
+    dframe =  pd.DataFrame.from_dict([attrs]).T
+    dframe.columns=["Values"]
+    # dframe.columns.names=['Parameters']
+    dframe.index.names=['Parameters']
+    #st.dataframe(dframe,use_container_width=True)
+    st.table(dframe)
+    
+def save_data(data):
+    data_type = st.radio(
+    "Choose spectra type ",
+    ('afm', 'nsom'))
+    now = datetime.now()
+    date = now.strftime("%Y-%d-%b-%H:%M:%S")
+    fname = data_type+'-'+date+'.csv'
+
+
+    if data[0].ndim>2:
+            afm  = data[0][:,:,0]
+            nsom = data[0][:,:,1]
+    else:
+        afm = data[0]
+        nsom = None
+    
+    if data_type == 'afm':
+        sel_data = pd.DataFrame(afm).to_csv(index=False).encode('utf-8')
+    if data_type == 'nsom':
+        sel_data = pd.DataFrame(nsom).to_csv(index=False).encode('utf-8')
+
+    
+    st.download_button( label="Download data as CSV",
+    data=sel_data,
+    file_name=fname,
+    mime='text/csv',
+)
+    
+
+    
+            
+        
+        
     
