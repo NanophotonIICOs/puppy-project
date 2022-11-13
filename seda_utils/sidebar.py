@@ -20,7 +20,7 @@ def sidebar_head():
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     # SERSitivis logo
-    html_code = utils.show_seda_logo(80, [0, 0, 0, 0], margin=[0, 0, 0, 15])
+    html_code = utils.show_seda_logo(100, [0, 0, 0, 0], margin=[0, 0, 0, 0])
     st.sidebar.markdown(html_code, unsafe_allow_html=True)
     st.sidebar.markdown('')
     st.sidebar.markdown('')
@@ -41,13 +41,12 @@ def choose_sample(laboratory):
     s_samples = st.sidebar.selectbox(
         "Sample",
         samples,
-        #format_func=LABELS.get,
         index=3
         )
     return s_samples
 
 
-def nano_lab_choose_spectra_type():
+def choose_spectra_type():
     spectra_types = ['nsom','afm']
     spectrometer = st.sidebar.selectbox(
         "Spectra type",
@@ -56,15 +55,14 @@ def nano_lab_choose_spectra_type():
         )
     return spectrometer
 
-def choose_measure(laboratory,experiment,sample):
-    try:
-        exp = experiments(laboratory,experiment,sample)
-        list_meas = exp.meas_list[::-1]
-        measures = st.sidebar.selectbox(
-            "Experiment Measure",
-            list_meas,
-            index=0)
-        return  measures
-    except (AttributeError,IndexError):
-        utils.error_alert()
-    
+def show_experiments(exp):
+    meas = exp.exp_meas
+    if meas:
+        list_meas = [i.split('/')[-1] for i in exp.exp_meas[::-1]]
+        expmeas = st.sidebar.selectbox(
+                "Experiments",
+                list_meas,
+                index=0)
+        return expmeas
+    else:
+        pass

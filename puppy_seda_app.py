@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from seda_utils import authors,main_page,sidebar,visualisation
+from seda_utils import authors,main_page,sidebar,visualisation,real_time_experiment
 
 import sentry_sdk
 
@@ -39,7 +39,11 @@ def main():
         main_page.main_page()
     if analysis_type == 'Nano Lab':
         laboratory = "nano-lab"
-        visualisation.visualisation(laboratory)
+        options = st.sidebar.selectbox('Choose an option',["Visualization data","Real-time experiment"])
+        if options =='Visualization data':
+            visualisation.visualisation(laboratory)
+        elif options == 'Real-time experiment':
+            real_time_experiment.run_time_exp(laboratory)
 
 
     #     visualisation.visualisation()

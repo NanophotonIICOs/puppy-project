@@ -6,9 +6,6 @@ import h5py as h5
 from os import walk
 from IPython.display import clear_output
 
-
-    
-
 class experiments:
     def __init__(self,lab,exptype,sample,printtable=False):
         self.path='/media/labfiles/lab-exps'
@@ -106,7 +103,7 @@ class experiments:
 
 
 
-class read_data:
+class get_data:
     def __init__(self,lab,exptype,sample,printtable=False,**kwargs):
         self.path='/media/labfiles/lab-exps'
         self.headers=['No. Dir','Name Dir']
@@ -132,20 +129,28 @@ class read_data:
         
         
     def get_spectra(self,sel_meas):
-        
-        for meas in exp_meas:
-            if self_meas in meas:
+        self.meas_attrs={}
+        self.meas_data = []
+        for meas in self.exp_meas:
+            if sel_meas in meas:
                 opendat = h5.File(meas,'r')
+                gdata=[]
                 for iset in opendat.keys():
                     if len(list(opendat.keys()))>1:
                         for jset in opendat[iset].keys():
-                            self.meas_data= opendat[iset][jset][:]
+                            gdata.append(opendat[iset][jset][:])
                             for attr in opendat[iset][jset].attrs.keys():
-                                self.attr_dict[attr] = opendat[iset][jset].attrs[attr]
-                
-    
-        
-        return self.meas_attrs, self.meas_data
+                                self.meas_attrs[attr] = opendat[iset][jset].attrs[attr]
+                    else:
+                        gdata.append(np.array(opendat[iset]))
+                        try:
+                            for attr in opendat[iset].attrs.keys():
+                                self.meas_attrs[attr]= opendat[iset].attrs[attr]
+                        except:
+                            pass    
+                self.meas_data.append(gdata)                   
+                        
+        return self.meas_attrs, self.meas_data[0]
             
                 
                 
