@@ -1,8 +1,9 @@
-import streamlit as st
 import os
-from seda_utils import authors,main_page,sidebar,visualisation,real_time_experiment
 
 import sentry_sdk
+import streamlit as st
+from seda_utils import (authors, main_page, real_time_experiment, sidebar,
+                        visualisation)
 
 if os.path.isfile(".streamlit/secrets.toml"):
     if 'sentry_url' in st.secrets:
@@ -32,17 +33,17 @@ def main():
 
     # Sets sidebar's header and logo
     sidebar.sidebar_head()
-
-    analysis_type = st.sidebar.selectbox("Choose Laboratory", ['Main Page', 'Nano Lab'])
+    list_options =['Main Page', 'Nano Lab']
+    analysis_type = st.sidebar.selectbox("Choose Laboratory",list_options,disabled=False )
 
     if analysis_type == 'Main Page':
         main_page.main_page()
     if analysis_type == 'Nano Lab':
         laboratory = "nano-lab"
         options = st.sidebar.selectbox('Choose an option',["Visualization data","Real-time experiment"])
-        if options =='Visualization data':
+        if options =="Visualization data":
             visualisation.visualisation(laboratory)
-        elif options == 'Real-time experiment':
+        elif options == "Real-time experiment":
             real_time_experiment.run_time_exp(laboratory)
 
 

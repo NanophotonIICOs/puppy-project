@@ -181,9 +181,9 @@ def tick_color():
 def fig_size():
     inner_cols = st.columns([1, 1])
     with inner_cols[0]:
-        fig_width = st.number_input('Figure width:',min_value=500,max_value=1000,value=500,step=100)
+        fig_width = st.number_input('Figure width:',min_value=400,max_value=900,value=400,step=50)
     with inner_cols[1]:
-        fig_height = st.number_input('Figure height:',min_value=500,max_value=1000,value=500,step=100)
+        fig_height = st.number_input('Figure height:',min_value=400,max_value=900,value=400,step=50)
     
     return fig_width, fig_width
     

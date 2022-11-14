@@ -17,9 +17,8 @@ def visualisation(laboratory):
 
     
     # sidebar separating line
-    col_left, col_right = st.columns([6, 2])
+    col_left, col_right = st.columns([5, 2])
     if exp_meas:
-        
         if spectra == 'nsom':
             afm = data[0]
             nsom = data[1]
