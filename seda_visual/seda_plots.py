@@ -75,8 +75,8 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
         fig_width = kwargs.pop('fig_width')
         fig_height = kwargs.pop('fig_height')
     else:
-        fig_width=600
-        fig_height=500
+        fig_width=400
+        fig_height=400
         
     z = data
     nx = z.shape[0]
@@ -106,9 +106,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
         yt = np.arange(yi,yf,tick_step)
         xtl = xt*step
         ytl = yt*step
-        # utils.error_alert()
-        
-        
+        # utils.error_alert()  
     
     fig = make_subplots(
             rows=2, cols=2, 
@@ -116,7 +114,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             row_heights=[0.5, 0.5],
             specs=[[{'type': 'surface','rowspan':2},{'type': 'contour'}],
                 [None, {'type':'scatter'}]],
-            horizontal_spacing=0.00,
+            horizontal_spacing=0.01,
             vertical_spacing=0.05,
             shared_xaxes=True,
             )
@@ -153,7 +151,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             template=template,
             width=fig_width,
             height=fig_height,
-            margin=dict(t=50, b=55, r=50, l=50),
+            margin=dict(t=50, b=50, r=50, l=50),
             uirevision=True,
             font=dict(
                         color=tick_color,
@@ -166,7 +164,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=xtl,tickvals=xt,tickprefix= "nm",),
             yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=ytl,tickvals=yt,tickprefix= "nm",),
             zaxis=dict(),
-            aspectratio= {"x": 1.25, "y": 1.25, "z": 2},
+            aspectratio= {"x": 1, "y": 1, "z": 1.5},
             camera_eye= {"x": 2, "y": 2, "z": 2},
 
     ),
