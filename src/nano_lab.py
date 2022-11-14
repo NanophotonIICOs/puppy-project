@@ -98,10 +98,6 @@ class experiments:
              return amplitud, fase
         except:
              return None
-       
-  
-
-
 
 class get_data:
     def __init__(self,lab,exptype,sample,printtable=False,**kwargs):
@@ -114,7 +110,6 @@ class get_data:
         self.folder_samples=[]
         self.exp_meas=[]
         self.name_meas=[]
-    
         self.path = self.path+'/'+self.lab
         for folders in glob(self.path+'/*'):
              self.folder_samples.append(folders)
@@ -126,7 +121,6 @@ class get_data:
                     if self.exptype in name:
                         self.exp_meas.append(name)
                         self.name_meas.append(name.split('/')[-1])
-        
         
     def get_spectra(self,sel_meas):
         self.meas_attrs={}
@@ -154,6 +148,10 @@ class get_data:
             
                 
                 
+    def xyz_data(self,data):
+        z = data.flatten()
+        
+        
 
 
             
