@@ -19,9 +19,6 @@ if os.path.isfile(".streamlit/secrets.toml"):
 else:
     print('Ok')
 
-
-
-
 def main():
     """
     Main is responsible for the visualisation of everything connected with streamlit.
