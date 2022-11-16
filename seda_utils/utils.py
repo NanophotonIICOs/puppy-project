@@ -178,6 +178,15 @@ def tick_color():
     tscolor  = st.color_picker('Ticks and plot lines color', '#0F06FF')
     return tscolor
 
+def ticks():
+    inner_cols = st.columns([1, 1])
+    with inner_cols[0]:
+        tscolor = st.color_picker('Color', '#0F06FF')
+    with inner_cols[1]:
+        tsfsize  = st.number_input('Font size',min_value=8,max_value=15,value=10,step=1)
+    return tscolor, tsfsize
+
+
 def fig_size():
     inner_cols = st.columns([1, 1])
     with inner_cols[0]:
