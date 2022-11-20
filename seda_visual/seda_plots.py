@@ -66,6 +66,11 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
     else:
         tick_step = 1
         
+    if 'fsize' in kwargs:
+        fsize= kwargs.pop('fsize')
+    else:
+        fsize=10
+        
     if 'tick_color' in kwargs:
         tick_color = kwargs.pop('tick_color')
     else:
@@ -77,6 +82,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
     else:
         fig_width=400
         fig_height=400
+        
         
     z = data
     nx = z.shape[0]
@@ -123,10 +129,11 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
     # Generate data
     fig.add_trace(go.Surface(z=data.T,showscale=False,colorscale=color),row=1, col=1)
     fig.add_trace(go.Heatmap(z=data.T,connectgaps=True, zsmooth='best',colorscale=color,
-                            colorbar=dict(thickness=20,
-                            ticklen=10,
-                            tickcolor=tick_color,
-                            tickfont=dict(size=17))),row=1, col=2)
+                                colorbar=dict(thickness=20,
+                                ticklen=10,
+                                tickcolor=tick_color,
+                                tickfont=dict(size=fsize))
+                             ),row=1, col=2)
     fig.add_trace(go.Surface(z=list(expsoffsets.z_offset),  # type: ignore
                 x=list(expsoffsets.x),
                 y=list(expsoffsets.y),
@@ -155,7 +162,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             uirevision=True,
             font=dict(
                         color=tick_color,
-                            size=13,
+                            size=fsize,
                      ),   
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis2 = dict(title='x (nm)',tickvals=xt,ticktext=xtl,range=[xi,xf]),
@@ -164,7 +171,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             xaxis=dict(title = 'x (nm)',tickmode='array',ticktext=xtl,tickvals=xt,tickprefix= "nm",),
             yaxis=dict(title = 'y (nm)',tickmode='array',ticktext=ytl,tickvals=yt,tickprefix= "nm",),
             zaxis=dict(),
-            aspectratio= {"x": 1, "y": 1, "z": 1.5},
+            aspectratio= {"x": 1.5, "y": 1.5, "z": 2},
             camera_eye= {"x": 2, "y": 2, "z": 2},
 
     ),
