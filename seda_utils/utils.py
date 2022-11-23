@@ -11,7 +11,6 @@ from datetime import date
 from datetime import datetime
 import streamlit_nested_layout
 
-
 def trim_spectra(df):
     # trim raman shift range
     min_, max_ = int(float(df.index.min())), int(float(df.index.max())) + 1
@@ -183,7 +182,7 @@ def ticks():
     with inner_cols[0]:
         tscolor = st.color_picker('Color', '#0F06FF')
     with inner_cols[1]:
-        tsfsize  = st.number_input('Font size',min_value=8,max_value=15,value=10,step=1)
+        tsfsize  = st.number_input('Font size',min_value=10,max_value=17,value=13,step=1)
     return tscolor, tsfsize
 
 
@@ -195,9 +194,6 @@ def fig_size():
         fig_height = st.number_input('Figure height:',min_value=400,max_value=900,value=400,step=50)
     
     return fig_width, fig_width
-    
-
-
 
 def get_plot_description():
     print_widget_labels('Labels')
