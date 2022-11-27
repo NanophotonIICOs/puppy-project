@@ -67,6 +67,7 @@ def visualisation(laboratory):
                                                  fsize=tsfsize)
                     st.plotly_chart(figs,use_container_width=True,)
                     
+                    
                 with st.expander('NSOM',expanded=True):
                     figs=splots.fig_3d_2d_layout(nsom,
                                                  template,
