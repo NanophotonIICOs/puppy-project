@@ -12,5 +12,5 @@ from nano_lab import get_data
 
 
 
-def run_time_exp(laboratory):
-    st.sidebar.button('check real-time experiment')
+# def run_time_exp(laboratory):
+#     st.sidebar.button('check real-time experiment')
