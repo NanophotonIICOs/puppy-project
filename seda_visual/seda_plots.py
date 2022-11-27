@@ -8,9 +8,7 @@ from seda_utils import utils
 def zmap(exptype):
     '''
     function to add heatmap below of 3D plot
-
     '''
-    
     z = exptype.T
     nx, ny = z.shape[1], z.shape[0]
     x, y = np.meshgrid(np.arange(0, nx, 1), np.arange(0, ny, 1))
@@ -158,7 +156,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             template=template,
             width=fig_width,
             height=fig_height,
-            margin=dict(t=50, b=50, r=50, l=50),
+            margin=dict(t=50, b=50, r=100, l=50),
             uirevision=True,
             font=dict(
                         color=tick_color,
