@@ -51,6 +51,9 @@ def visualisation(laboratory):
                 utils.data_properties(attrs)
                 
         # Data plottin
+        
+        
+        
         with col_left:
             st.header('Plots')
             if spectra == 'nsom':
