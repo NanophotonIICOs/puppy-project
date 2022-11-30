@@ -24,7 +24,6 @@ def main():
     Main is responsible for the visualisation of everything connected with streamlit.
     It is the web application itself.
     """
-
     # # Radiobuttons in one row
     # st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
