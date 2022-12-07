@@ -48,10 +48,13 @@ class experiments:
                         for iset in opendat.keys():
                             dsets.append(iset)
                             if len(list(opendat.keys()))>1:
-                                for jset in opendat[iset].keys():
-                                    self.datac.append(np.array(opendat[iset][jset]))
-                                    for attr in opendat[iset][jset].attrs.keys():
-                                        attr_dict[attr]= opendat[iset][jset].attrs[attr]
+                                try:
+                                    for jset in opendat[iset].keys():
+                                        self.datac.append(np.array(opendat[iset][jset]))
+                                        for attr in opendat[iset][jset].attrs.keys():
+                                            attr_dict[attr]= opendat[iset][jset].attrs[attr]
+                                except:
+                                    self.datac.append(np.array(opendat[iset]))
                             else:
                                 self.datac.append(np.array(opendat[iset]))
                                 try:
@@ -131,10 +134,13 @@ class get_data:
                 gdata=[]
                 for iset in opendat.keys():
                     if len(list(opendat.keys()))>1:
-                        for jset in opendat[iset].keys():
-                            gdata.append(opendat[iset][jset][:])
-                            for attr in opendat[iset][jset].attrs.keys():
-                                self.meas_attrs[attr] = opendat[iset][jset].attrs[attr]
+                        #try:
+                            for jset in opendat[iset].keys():
+                                gdata.append(opendat[iset][jset][:])
+                                for attr in opendat[iset][jset].attrs.keys():
+                                    self.meas_attrs[attr] = opendat[iset][jset].attrs[attr]
+                        #except:
+                         #   gdata.append(opendat[iset][:])
                     else:
                         gdata.append(np.array(opendat[iset]))
                         try:
@@ -147,9 +153,9 @@ class get_data:
         return self.meas_attrs, self.meas_data[0]
             
                 
-                
-    def xyz_data(self,data):
-        z = data.flatten()
+    
+    # def xyz_data(self,data):
+    #     z = data.flatten()
         
         
 
