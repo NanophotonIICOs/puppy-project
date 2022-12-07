@@ -347,6 +347,7 @@ def get_data_spectra(exp,sel_meas):
     if meas:
         attrs, data = exp.get_spectra(sel_meas)
         if data[0].ndim>2:
+            #print(data[0].shape)
             afm  = data[0][:,:,0]
             nsom = data[0][:,:,1]
             return afm, nsom, attrs

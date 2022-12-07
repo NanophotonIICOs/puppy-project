@@ -156,7 +156,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             template=template,
             width=fig_width,
             height=fig_height,
-            margin=dict(t=50, b=50, r=100, l=50),
+            margin=dict(t=50, b=70, r=100, l=50),
             uirevision=True,
             font=dict(
                         color=tick_color,
@@ -171,7 +171,6 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             zaxis=dict(),
             aspectratio= {"x": 1.5, "y": 1.5, "z": 2},
             camera_eye= {"x": 2, "y": 2, "z": 2},
-
-    ),
+            ),
     )
     return fig
