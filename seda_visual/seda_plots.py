@@ -4,7 +4,6 @@ from plotly.subplots import make_subplots
 from seda_utils import utils
 
 
-
 def zmap(exptype):
     '''
     function to add heatmap below of 3D plot
@@ -80,7 +79,6 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
     else:
         fig_width=400
         fig_height=400
-        
         
     z = data
     nx = z.shape[0]
@@ -174,3 +172,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             ),
     )
     return fig
+
+
+
+

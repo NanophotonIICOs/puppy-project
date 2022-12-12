@@ -89,8 +89,6 @@ class experiments:
         except IndexError:
             return self.data[measure][0]
             
-        
-    
     def exps_attr(self,measure):
         return self.attribs[measure]
 
@@ -142,6 +140,7 @@ class get_data:
                         #except:
                          #   gdata.append(opendat[iset][:])
                     else:
+                        
                         gdata.append(np.array(opendat[iset]))
                         try:
                             for attr in opendat[iset].attrs.keys():
