@@ -109,7 +109,6 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
         xtl = xt*step
         ytl = yt*step
         # utils.error_alert()  
-    
     fig = make_subplots(
             rows=2, cols=2, 
             column_widths=[0.7, 0.3],
@@ -172,6 +171,7 @@ def fig_3d_2d_layout(data,template,attrs,pixel,color,**kwargs):
             ),
     )
     return fig
+
 
 
 
