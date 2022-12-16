@@ -1,8 +1,14 @@
 import streamlit as st
 from seda_utils import utils
 from constants import LABELS
-
+import os
 from nano_lab import experiments
+from PIL import Image
+
+icons_path = os.path.abspath(os.path.dirname(__file__))
+iconpathpuppy = os.path.join(icons_path, "seda_icons/puppy_icon.png")
+
+imicon = Image.open(iconpathpuppy)
 
 def sidebar_head():
     """
@@ -12,14 +18,12 @@ def sidebar_head():
     """
     st.set_page_config(
         page_title="SEDA IICO",
-        page_icon="seda_icons/puppy_icon.png",
+        page_icon=imicon,
         layout="wide",
         initial_sidebar_state="auto"
     )
-
     st.set_option('deprecation.showfileUploaderEncoding', False)
-
-    # SERSitivis logo
+    #puppy logo
     html_code = utils.show_seda_logo(100, [0, 0, 0, 0], margin=[0, 0, 0, 0])
     st.sidebar.markdown(html_code, unsafe_allow_html=True)
     st.sidebar.markdown('')
@@ -64,5 +68,3 @@ def show_experiments(exp):
                 list_meas,
                 index=0)
         return expmeas
-    else:
-        pass
