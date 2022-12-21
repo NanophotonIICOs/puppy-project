@@ -16,7 +16,8 @@ if os.path.isfile(".streamlit/secrets.toml"):
     else:
         print('sentry not running')
 else:
-    print('Ok')
+    print('Ok!')
+
 
 def main():
     """
