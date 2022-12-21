@@ -1,0 +1,58 @@
+\documentclass[12pt,
+a4paper,
+oneside,
+parskip=half,
+numbers=noenddot,
+toc=bibliographynumbered,
+toc=listofnumbered]{scrbook}
+
+\input{files/packages}
+\input{files/commands}
+\begin{document}
+\def\pgtitle{2}
+\ifnum\pgtitle=2
+    \input{files/title-page-puppy-v2.tex}
+\else
+    \input{files/title-page-puppy.tex}
+\fi
+%\input{files/statement.tex}
+%\input{files/abstract.tex}
+\author
+\let\cleardoublepage\clearpage %
+%\input{files/dedication.tex} %
+%\input{files/acknoweldgement.tex}
+%\let\cleardoublepage\clearpage %
+\frontmatter
+\pagenumbering{Roman}
+%\input
+%\input{{FILES/ABSTRACT}
+\dominitoc
+\dominilof
+\dominilot
+\adjustmtc
+\tableofcontents
+\input{files/symbols} % Include the glossary definitions
+\robustify{\gls}
+\listoffigures
+\listoftables
+%\glsaddall  
+\addtocounter{mtc}{2}% manual offset
+\mainmatter
+\input{files/chapter-1}
+% \input{files/chapter-2-physical-model}
+% \input{files/chapter-3-results}
+% \input{files/chapter-4-conclusions}
+%\subfile{files/chapter-1-introduction}
+%\subfile{files/chapter-2-physical-model}
+%%
+%\appendix%
+%\footnotesize
+%\nocite{*}
+\bibliographystyle{IEEEtran}
+%\bibliographystyle{unsrtnat}
+\bibliography{files/references.bib} % Reference bib-library file
+
+
+\end{document}
+
+

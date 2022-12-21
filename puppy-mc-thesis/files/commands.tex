@@ -1,0 +1,71 @@
+\newcommand{\Aref}[1]{Appendix  \ref{#1}} %\thechapter
+\def\chapterautorefname{Chapter}
+\usepackage{xspace}
+\definecolor{NatGreen}{RGB}{50,93,61}
+\newcolumntype{x}[1]{%
+>{\raggedleft\hspace{0pt}}m{#1}}%
+
+
+
+
+\hypersetup
+{pdftitle={MC Puppy Thesis},
+pdfauthor={Karla Alferez},
+pdfsubject={MC Thesis}, %subject of the document
+%pdftoolbar=false, % toolbar hidden
+pdfmenubar=true, %menubar shown
+pdfhighlight=/O, %effect of clicking on a link
+colorlinks=true, %couleurs sur les liens hypertextes
+pdfpagemode=UseOutlines,%UseNone, %aucun mode de page
+pdfpagelayout=SinglePage,%SinglePage,TwoPageRight, %ouverture en simple page
+pdffitwindow=true, %pages ouvertes entierement dans toute la fenetre
+linkcolor=blue, %couleur des liens hypertextes internes
+citecolor=blue, %couleur des liens pour les citations
+urlcolor=cyan,  %couleur des liens pour les url
+bookmarksopenlevel=2
+}
+
+
+
+
+%============================== footnotes options =================================%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+%---------------------------------------------------------%
+%\DeclareFieldFormat{volcitevolume}{\bibstring{volume}\ppspace\RN{#1}}
+%\AtEveryCitekey{\clearfield{institude}}
+%\renewcommand{\cite}{\supercite}
+%\renewcommand{\citep}{\supercite}
+%\renewcommand{\citet}[2][]{\citeauthor{#2}\supercite{#2}\ifstrempty{#1}{}{, #1}}
+% \DeclareFieldFormat{bibentrysetcount}{\newline(\mknumalph{#1})\addhighpenspace}
+
+
+% \renewcommand{\ptcfont}{\normal\rm}
+% \renewcommand{\ptcCfont}{\normal\bm}
+% \renewcommand{\ptcSfont}{\normal\rm}
+% \renewcommand{\ptcSSfont}{\footnotesize\rm}
+% \renewcommand{\ptcSSSfont}{\footnotesize\rm}
+
+
+
+
+
+% Some useful commands and shortcut for maths:  partial derivative and stuff
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\def\abs{\operatorname{abs}}
+\def\argmax{\operatornamewithlimits{arg\,max}}
+\def\argmin{\operatornamewithlimits{arg\,min}}
+\def\diag{\operatorname{Diag}}
+\newcommand{\eqRef}[1]{(\ref{#1})}
+
+
+
+%Paths
+
+\graphicspath{{./images/}}
+
